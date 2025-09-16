@@ -43,9 +43,9 @@ export const HelloWordScreens = () => {
             styles.button,
             pressed && styles.buttonPressed
           ]}
-          onPress={() => navigation.navigate('ChatPropuesta')}
+          onPress={() => navigation.navigate('Propuestas')}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Propuestas</Text>
         </Pressable>
         
         

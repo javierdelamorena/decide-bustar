@@ -33,6 +33,14 @@ export const Usuario = () => {
       icon: 'list',
       color: '#9b59b6',
       description: 'Explora todas las propuestas de la comunidad'
+    },
+    {
+      id: 4,
+      title: 'Editar Usuario',
+      screen: 'EditarUsuario',
+      icon: 'list',
+      color: '#9b59b6',
+      description: 'Edita tus datos'
     }
   ];
 
