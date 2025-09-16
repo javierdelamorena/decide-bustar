@@ -123,7 +123,7 @@ export const Login = () => {
 
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>¿No tienes una cuenta? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Register' as never)}>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
               <Text style={styles.signupLink}>Regístrate</Text>
             </TouchableOpacity>
           </View>

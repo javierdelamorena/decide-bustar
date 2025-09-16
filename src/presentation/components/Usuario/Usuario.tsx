@@ -43,7 +43,7 @@ export const Usuario = () => {
       description: 'Edita tus datos'
     },
     {
-      id: 4,
+      id: 5,
       title: 'Darse de baja',
       screen: 'Baja',
       icon: 'list',

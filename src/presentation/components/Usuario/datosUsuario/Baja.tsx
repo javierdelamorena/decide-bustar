@@ -29,7 +29,7 @@ export const Baja = () =>   {
              
               >
                
-                  <Text style={styles.registerButtonText}>Actualizar</Text>
+                      <Text style={styles.registerButtonText}>Darse de Baja</Text>
                 
               </TouchableOpacity>
     
