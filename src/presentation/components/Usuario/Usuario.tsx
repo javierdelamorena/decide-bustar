@@ -22,7 +22,7 @@ export const Usuario = () => {
       id: 2,
       title: 'Tus Propuestas',
       screen: 'TusPropuestas',
-      icon: 'list',
+      icon: 'list-outline',
       color: '#2ecc71',
       description: 'Revisa el estado de tus propuestas enviadas'
     },
@@ -30,7 +30,7 @@ export const Usuario = () => {
       id: 3,
       title: 'Lista de Propuestas',
       screen: 'ListaPropuestas',
-      icon: 'list',
+      icon: 'library-outline',
       color: '#9b59b6',
       description: 'Explora todas las propuestas de la comunidad'
     },
@@ -38,7 +38,7 @@ export const Usuario = () => {
       id: 4,
       title: 'Editar Usuario',
       screen: 'EditarUsuario',
-      icon: 'list',
+      icon: 'build-outline',
       color: '#9b59b6',
       description: 'Edita tus datos'
     },
@@ -46,7 +46,7 @@ export const Usuario = () => {
       id: 5,
       title: 'Darse de baja',
       screen: 'Baja',
-      icon: 'list',
+      icon: 'trash-outline',
       color: '#9b59b6',
       description: 'Darse de baja'
     }

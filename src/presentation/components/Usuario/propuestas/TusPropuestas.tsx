@@ -50,7 +50,7 @@ export const TusPropuestas = () => {
           <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
           
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Tus las propuestas</Text>
+            <Text style={styles.headerTitle}>Tus propuestas</Text>
             
           </View>
           
