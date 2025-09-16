@@ -3,6 +3,7 @@ import { HelloWordScreens } from '../components/entrada/HelloWordScreens';
 import { ListaPropuestasVisibles } from '../components/registro-login-auth/ListaPropuestasVisibles';
 import { Login } from '../components/registro-login-auth/Login';
 import { Register } from '../components/registro-login-auth/Register';
+import { Baja } from '../components/Usuario/Baja';
 import { EditarUsuario } from '../components/Usuario/EditarUsuario';
 import { ChatPropuesta } from '../components/Usuario/propuestas/ChatPropuesta';
 import { ListaPropuestas } from '../components/Usuario/propuestas/Listapropuestas';
@@ -23,6 +24,7 @@ export type RootStackParams={
   ListaPropuestas: undefined,
   EditarUsuario: undefined
   Propuestas: undefined
+  Baja: undefined
 }
 // Crear el Stack Navigator correctamente
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -42,6 +44,7 @@ export const StackNavigator=()=> {
       <Stack.Screen name="ListaPropuestas" component={ListaPropuestas} />
       <Stack.Screen name="Propuestas" component={ListaPropuestasVisibles} />
       <Stack.Screen name="EditarUsuario" component={EditarUsuario} />
+      <Stack.Screen name="Baja" component={Baja} />
      
 
       

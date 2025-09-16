@@ -41,6 +41,14 @@ export const Usuario = () => {
       icon: 'list',
       color: '#9b59b6',
       description: 'Edita tus datos'
+    },
+    {
+      id: 4,
+      title: 'Darse de baja',
+      screen: 'Baja',
+      icon: 'list',
+      color: '#9b59b6',
+      description: 'Darse de baja'
     }
   ];
 
