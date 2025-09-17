@@ -1,6 +1,8 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
+
+
 import {
   ActivityIndicator,
   Alert,
@@ -14,40 +16,54 @@ import {
   View
 } from 'react-native';
 import { RootStackParams } from '../../routes/StackNavigator';
+import { useAuthStore } from './auth/useAuthStore';
 
 export const Login = () => {
-     const navigation = useNavigation<NavigationProp<RootStackParams>>();
-    
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [form, setForm] = useState({
 
-  const handleLogin = () => {
+    email: '',
+    password: ''
+
+  });
+  const { login } = useAuthStore();
+
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
     }
 
+    const wassuscesfull = await login(form.email, form.password);
+
+    if (wassuscesfull) return;
+
+    Alert.alert('error', 'usuario no autenticado')
+
     if (!isValidEmail(email)) {
       Alert.alert('Error', 'Por favor ingresa un email válido');
       return;
-    }else{
+    } else {
       navigation.navigate('Usuario');
     }
 
     setIsLoading(true);
-    
+
     // Simulación de proceso de login
     setTimeout(() => {
       setIsLoading(false);
       // Aquí iría tu lógica de autenticación real
       Alert.alert('Éxito', 'Inicio de sesión exitoso');
-        // Navegar a la pantalla principal después del login
+      // Navegar a la pantalla principal después del login
     }, 1500);
   };
 
-  const isValidEmail = (emai:any) => {
+  const isValidEmail = (emai: any) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
@@ -79,8 +95,8 @@ export const Login = () => {
               style={styles.input}
               placeholder="tu@email.com"
               placeholderTextColor="#999"
-              value={email}
-              onChangeText={setEmail}
+              value={form.email}
+              onChangeText={(email) => setForm({ ...form, email })}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -93,10 +109,9 @@ export const Login = () => {
                 style={styles.passwordInput}
                 placeholder="Ingresa tu contraseña"
                 placeholderTextColor="#999"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={secureTextEntry}
-              />
+                value={form.password}
+                onChangeText={(password) => setForm({ ...form, password })}
+                secureTextEntry={secureTextEntry} />
               <TouchableOpacity onPress={toggleSecureEntry} style={styles.eyeButton}>
                 <Text style={styles.eyeText}>
                   {secureTextEntry ? 'Mostrar' : 'Ocultar'}
@@ -109,8 +124,8 @@ export const Login = () => {
             <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
+          <TouchableOpacity
+            style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
             onPress={handleLogin}
             disabled={isLoading}
           >

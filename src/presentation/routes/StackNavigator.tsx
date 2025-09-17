@@ -4,7 +4,7 @@ import { ListaPropuestasVisibles } from '../components/registro-login-auth/Lista
 import { Login } from '../components/registro-login-auth/Login';
 import { Register } from '../components/registro-login-auth/Register';
 import { Baja } from '../components/Usuario/datosUsuario/Baja';
-import { EditarUsuario } from '../components/Usuario/datosUsuario/EditarUsuario';
+import { EditarUsuario } from '../components/Usuario/EditarUsuario';
 import { ChatPropuesta } from '../components/Usuario/propuestas/ChatPropuesta';
 import { ListaPropuestas } from '../components/Usuario/propuestas/Listapropuestas';
 import { RealizarPropuesta } from '../components/Usuario/propuestas/Realizarpropuesta';
