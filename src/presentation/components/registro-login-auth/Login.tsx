@@ -27,30 +27,30 @@ export const Login = () => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [form, setForm] = useState({
 
-    email: '',
+    user_name: '',
     password: ''
 
   });
   const { login } = useAuthStore();
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Por favor completa todos los campos');
-      return;
-    }
+    // if (!email || !password) {
+    //   Alert.alert('Error', 'Por favor completa todos los campos');
+    //   return;
+    // }
 
-    const wassuscesfull = await login(form.email, form.password);
+    const wassuscesfull = await login(form.user_name, form.password);
 
     if (wassuscesfull) return;
-
+   console.log(wassuscesfull);
     Alert.alert('error', 'usuario no autenticado')
 
-    if (!isValidEmail(email)) {
-      Alert.alert('Error', 'Por favor ingresa un email válido');
-      return;
-    } else {
-      navigation.navigate('Usuario');
-    }
+    // if (!isValidEmail(email)) {
+    //   Alert.alert('Error', 'Por favor ingresa un email válido');
+    //   return;
+    // } else {
+    //   navigation.navigate('Usuario');
+    // }
 
     setIsLoading(true);
 
@@ -63,10 +63,10 @@ export const Login = () => {
     }, 1500);
   };
 
-  const isValidEmail = (emai: any) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
+  // const isValidEmail = (emai: any) => {
+  //   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   return re.test(email);
+  // };
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -95,8 +95,8 @@ export const Login = () => {
               style={styles.input}
               placeholder="tu@email.com"
               placeholderTextColor="#999"
-              value={form.email}
-              onChangeText={(email) => setForm({ ...form, email })}
+              value={form.user_name}
+              onChangeText={(user_name) => setForm({ ...form, user_name })}
               keyboardType="email-address"
               autoCapitalize="none"
             />

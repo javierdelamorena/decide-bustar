@@ -1,4 +1,4 @@
-import { API_URL, STAGE } from '@env';
+import { API_URL} from '@env';
 import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -8,7 +8,7 @@ import { globalStyles } from '../../theme/global.style';
 // Asegúrate de que este componente esté EXPORTADO
 export const HelloWordScreens = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
-  console.log({ apiUrl: API_URL, stage: STAGE });
+  console.log({ apiUrl: API_URL });
   return (
     <View style={[globalStyles.centerContainer, styles.container]}>
       <Text style={styles.welcomeText}>Bienvenido a Bustarviejo</Text>
