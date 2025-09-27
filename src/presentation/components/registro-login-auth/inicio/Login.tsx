@@ -1,8 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-
-
-
 import {
   ActivityIndicator,
   Alert,
@@ -15,58 +12,53 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { RootStackParams } from '../../routes/StackNavigator';
-import { useAuthStore } from './auth/useAuthStore';
+import { RootStackParams } from '../../../routes/StackNavigator';
+import { useAuthStore } from '../auth/useAuthStore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [form, setForm] = useState({
-
-    user_name: '',
+    username: '',
     password: ''
-
   });
-  const { login } = useAuthStore();
+
+
+// Llama a esta función en tu app
+// testConnection();
+
+  //  CORRECTO: Usar selector para evitar problemas de referencias
+  const login = useAuthStore(state => state.login);
 
   const handleLogin = async () => {
-    // if (!email || !password) {
-    //   Alert.alert('Error', 'Por favor completa todos los campos');
-    //   return;
-    // }
-
-    const wassuscesfull = await login(form.user_name, form.password);
-
-    if (wassuscesfull) return;
-   console.log(wassuscesfull);
-    Alert.alert('error', 'usuario no autenticado')
-
-    // if (!isValidEmail(email)) {
-    //   Alert.alert('Error', 'Por favor ingresa un email válido');
-    //   return;
-    // } else {
-    //   navigation.navigate('Usuario');
-    // }
+    // Validación
+    if (!form.username || !form.password) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
 
     setIsLoading(true);
 
-    // Simulación de proceso de login
-    setTimeout(() => {
+    try {
+      const wasSuccessful = await login(form.username, form.password);
+      
+      if (wasSuccessful) {
+        // Alert.alert('Éxito', 'Inicio de sesión exitoso');
+        
+        navigation.navigate('Usuario')
+        
+      } else {
+        Alert.alert('Error', 'Usuario o contraseña incorrectos');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Ocurrió un problema al iniciar sesión');
+      console.error('Login error:', error);
+    } finally {
       setIsLoading(false);
-      // Aquí iría tu lógica de autenticación real
-      Alert.alert('Éxito', 'Inicio de sesión exitoso');
-      // Navegar a la pantalla principal después del login
-    }, 1500);
+    }
   };
-
-  // const isValidEmail = (emai: any) => {
-  //   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   return re.test(email);
-  // };
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -79,26 +71,21 @@ export const Login = () => {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}>
-          {/* <Image
-            source={require('./assets/logo.png')} // Asegúrate de tener un logo en tu proyecto
-            style={styles.logo}
-            resizeMode="contain"
-          /> */}
           <Text style={styles.title}>Bienvenido</Text>
           <Text style={styles.subtitle}>Inicia sesión en tu cuenta</Text>
         </View>
 
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>Usuario</Text>
             <TextInput
               style={styles.input}
-              placeholder="tu@email.com"
+              placeholder="Tu nombre de usuario"
               placeholderTextColor="#999"
-              value={form.user_name}
-              onChangeText={(user_name) => setForm({ ...form, user_name })}
-              keyboardType="email-address"
+              value={form.username}
+              onChangeText={(username) => setForm({ ...form, username })}
               autoCapitalize="none"
+              editable={!isLoading}
             />
           </View>
 
@@ -111,8 +98,14 @@ export const Login = () => {
                 placeholderTextColor="#999"
                 value={form.password}
                 onChangeText={(password) => setForm({ ...form, password })}
-                secureTextEntry={secureTextEntry} />
-              <TouchableOpacity onPress={toggleSecureEntry} style={styles.eyeButton}>
+                secureTextEntry={secureTextEntry}
+                editable={!isLoading}
+              />
+              <TouchableOpacity 
+                onPress={toggleSecureEntry} 
+                style={styles.eyeButton}
+                disabled={isLoading}
+              >
                 <Text style={styles.eyeText}>
                   {secureTextEntry ? 'Mostrar' : 'Ocultar'}
                 </Text>
@@ -120,11 +113,7 @@ export const Login = () => {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
+          <TouchableOpacity 
             style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
             onPress={handleLogin}
             disabled={isLoading}
@@ -143,28 +132,12 @@ export const Login = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.socialLoginContainer}>
-          <Text style={styles.socialLoginText}>O inicia sesión con</Text>
-          <View style={styles.socialButtonsContainer}>
-            {/* <TouchableOpacity style={styles.socialButton}>
-              <Image
-                source={require('./assets/google.png')} // Añade iconos de Google y Facebook a tu proyecto
-                style={styles.socialIcon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              <Image
-                source={require('./assets/facebook.png')}
-                style={styles.socialIcon}
-              />
-            </TouchableOpacity> */}
-          </View>
-        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
+// Tus estilos permanecen igual...
 
 const styles = StyleSheet.create({
   container: {

@@ -1,14 +1,56 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { RootStackParams } from '../../routes/StackNavigator';
+import { RootStackParams } from '../../../routes/StackNavigator';
+import { StorrageAdater } from '../../../../adapters/Storage-adapter';
+import { useEffect } from 'react';
+import { User } from '../entities/user';
+
 
 const { width } = Dimensions.get('window');
 
 export const Usuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
-  
+
+  const [usuario, setUsuario] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+
+
+
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        console.log('Buscando user en storage...');
+        const userJson = await StorrageAdater.getItem('user');
+        console.log('User encontrado (JSON):', userJson);
+
+        if (userJson) {
+          // PARSEAR el JSON a objeto User
+          const userData: User = JSON.parse(userJson);
+          setUsuario(userData);
+          console.log('User parseado:', userData);
+        } else {
+          console.log('No se encontró user en storage');
+        }
+      } catch (error) {
+        console.error('Error al obtener user:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  // Este useEffect se ejecutará cuando "usuario" cambie
+  useEffect(() => {
+    console.log('Usuario actualizado:', usuario);
+  }, [usuario]); // ← Se ejecuta cuando "usuario" cambia
+
+  console.log('Renderizando con usuario:', usuario); // ← Este se ejecuta en cada render
   const menuItems = [
     {
       id: 1,
@@ -58,7 +100,8 @@ export const Usuario = () => {
         <View style={styles.avatarContainer}>
           <Icon name="person" size={40} color="#fff" />
         </View>
-        <Text style={styles.title}>¡Hola Usuario!</Text>
+        <Text style={styles.title}>!Hola {usuario?.username || 'Usuario'}!</Text>
+       
         <Text style={styles.subtitle}>¿Qué te gustaría hacer hoy?</Text>
       </View>
 

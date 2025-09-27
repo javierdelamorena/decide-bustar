@@ -1,10 +1,11 @@
 
-export interface Lista {
+export interface Propuestas {
     idUsuario: number;
     idPropuesta: string;
-    propuesta: string;
+    descripcion: string;
+    titulo:string
     fecha: string;
-    comentarios:string
+    
 
 
 }

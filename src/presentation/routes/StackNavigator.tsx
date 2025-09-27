@@ -1,15 +1,16 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HelloWordScreens } from '../components/entrada/HelloWordScreens';
-import { ListaPropuestasVisibles } from '../components/registro-login-auth/ListaPropuestasVisibles';
-import { Login } from '../components/registro-login-auth/Login';
-import { Register } from '../components/registro-login-auth/Register';
+import { ListaPropuestasVisibles } from '../components/registro-login-auth/inicio/ListaPropuestasVisibles';
+import { Login } from '../components/registro-login-auth/inicio/Login';
+import { Register } from '../components/registro-login-auth/inicio//Register';
 import { Baja } from '../components/Usuario/datosUsuario/Baja';
-import { EditarUsuario } from '../components/Usuario/EditarUsuario';
+import { EditarUsuario } from '../components/Usuario/datosUsuario/EditarUsuario';
 import { ChatPropuesta } from '../components/Usuario/propuestas/ChatPropuesta';
 import { ListaPropuestas } from '../components/Usuario/propuestas/Listapropuestas';
 import { RealizarPropuesta } from '../components/Usuario/propuestas/Realizarpropuesta';
 import { TusPropuestas } from '../components/Usuario/propuestas/TusPropuestas';
-import { Usuario } from '../components/Usuario/Usuario';
+import { Usuario } from '../components/Usuario/datosUsuario/Usuario';
+import { EditarPropuesta } from '../components/Usuario/propuestas/EditarPropuesta';
 
 
 export type RootStackParams={
@@ -17,14 +18,16 @@ export type RootStackParams={
   Login:undefined,
   Register:undefined,
   Counter:undefined,
-  ChatPropuesta:undefined,
+  ChatPropuesta?:{idPropuesta:number,idUsuario:number},
   Usuario:undefined,
   RealizarPropuesta:undefined,
   TusPropuestas:undefined,
   ListaPropuestas: undefined,
-  EditarUsuario: undefined
-  Propuestas: undefined
-  Baja: undefined
+  EditarUsuario: undefined,
+  Propuestas: undefined,
+  Baja: undefined,
+  EditarPropuesta?:{idPropuesta:number,titulo:string,descripcion:string},
+ 
 }
 // Crear el Stack Navigator correctamente
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -44,6 +47,7 @@ export const StackNavigator=()=> {
       <Stack.Screen name="ListaPropuestas" component={ListaPropuestas} />
       <Stack.Screen name="Propuestas" component={ListaPropuestasVisibles} />
       <Stack.Screen name="EditarUsuario" component={EditarUsuario} />
+      <Stack.Screen name="EditarPropuesta" component={EditarPropuesta} />
       <Stack.Screen name="Baja" component={Baja} />
      
 

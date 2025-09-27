@@ -5,39 +5,24 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParams } from '../../../routes/StackNavigator';
 import { propuestas } from '../../propuestas/propuestaResponse';
+
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { User } from '../entities/user';
+import { API_URL } from '../../../../api/tesloApi';
+import { Propuestas } from '../../../interfaces/propuestas';
 
 
 
 
-
-export const ListaPropuestas = () => {
+export const ListaPropuestasVisibles = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [usuario, setUsuario] = useState<User | null>(null);
 
   // Función para cargar las propuestas
-   const loadPropuestas = async () => {
+  const loadPropuestas = async () => {
     setLoading(true);
     setError(null);
-    try {
-      console.log('Buscando user en storage...');
-      const userJson = await StorrageAdater.getItem('user');
-      console.log('User encontrado (JSON):', userJson);
-
-      if (userJson) {
-        const userData: User = JSON.parse(userJson);
-        setUsuario(userData); // ← Guardar en estado
-        console.log('User parseado:', userData);
-      } else {
-        console.log('No se encontró user en storage');
-      }
-    } catch (error) {
-      console.error('Error al obtener user:', error);
-    } 
 
     try {
       const resultado = await propuestas();
@@ -45,7 +30,7 @@ export const ListaPropuestas = () => {
     } catch (err) {
       console.error('Error al cargar propuestas:', err);
       setError('No se pudieron cargar las propuestas');
-      setData([]);
+      setData([]); // Limpiar datos en caso de error
     } finally {
       setLoading(false);
     }
@@ -90,7 +75,7 @@ export const ListaPropuestas = () => {
             <TouchableOpacity
               key={item.idPropuesta}
               style={styles.item}
-              onPress={() => navigation.navigate('ChatPropuesta', { idPropuesta: item.idPropuesta, idUsuario: item.idUsuario })}
+            onPress={() => navigation.navigate('Login')}
             >
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.titulo}</Text>
@@ -116,7 +101,7 @@ export const ListaPropuestas = () => {
 
         <TouchableOpacity
           style={styles.fab}
-        // onPress={() => navigation.navigate('CrearPropuesta')}
+        onPress={() => navigation.navigate('Login')}
         >
           <Icon name="add" size={24} color="#ffffff" />
         </TouchableOpacity>

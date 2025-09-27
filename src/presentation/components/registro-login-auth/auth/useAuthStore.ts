@@ -1,7 +1,8 @@
 import { create } from "zustand/react";
-import { User } from "../../Usuario/entities/user";
+import { User } from '../../Usuario/entities/user';
 import { authLogin } from "./auth";
 import { AuthStatus } from "./authStatus";
+import { StorrageAdater } from "../../../../adapters/Storage-adapter";
 
 export interface AuthState {
     status: AuthStatus;
@@ -17,13 +18,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
 
 
-    login: async (user_name: string, password: string) => {
+    login: async (username: string, password: string) => {
 
-        const response = await authLogin(user_name, password);
+
+        const response = await authLogin(username, password);
         if (!response) {
             set({ status: 'unauthenticated', token: undefined, user: undefined })
             return false;
         }
+        const jsonValue = JSON.stringify(response.user)
+        await StorrageAdater.setItem('token', response.token);
+        await StorrageAdater.setItem('user', jsonValue)
+
         set({ status: 'authenticated', token: response.token, user: response.user })
         return true;
     }

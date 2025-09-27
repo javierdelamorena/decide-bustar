@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Lista } from "../interfaces";
+
 
 
 import {
@@ -11,7 +11,8 @@ import {
     View
 } from 'react-native';
 
-import Tablon from './Tablon';
+import Tablon from '../presentation/screens/Tablon';
+import { Lista } from './anuncios';
 
 
 

@@ -1,2 +1,2 @@
 
-export * from './shared/PrimaryButton';
+export * from '../../residuos/shared/PrimaryButton';
