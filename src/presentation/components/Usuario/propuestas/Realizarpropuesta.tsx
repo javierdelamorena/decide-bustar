@@ -4,7 +4,7 @@ import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../../../theme/global.style';
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { API_URL } from '@env';
+import { API_URL, idPueblo } from '@env';
 
 export const RealizarPropuesta = () => {
   const [formData, setFormData] = useState({
@@ -51,7 +51,8 @@ export const RealizarPropuesta = () => {
       titulo: formData.titulo.trim(),
       descripcion: formData.descripcion.trim(),
       idUsuario: userData.id, // ← ID del objeto usuario
-      username: userData.username // ← username del objeto usuario
+      username: userData.username, // ← username del objeto usuario
+      idPueblo:idPueblo
     };
 
     console.log('Datos a enviar:', datosCompletos);

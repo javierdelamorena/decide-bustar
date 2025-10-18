@@ -8,7 +8,7 @@ export interface AuthState {
     status: AuthStatus;
     token?: string;
     user?: User;
-    login: (user_name: string, password: string) => Promise<boolean>;
+    login: (email: string, password: string) => Promise<boolean>;
 }
 export const useAuthStore = create<AuthState>()((set, get) => ({
     status: "cheking",
@@ -18,10 +18,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
 
 
-    login: async (username: string, password: string) => {
+    login: async (email: string, password: string) => {
 
 
-        const response = await authLogin(username, password);
+        const response = await authLogin(email, password);
         if (!response) {
             set({ status: 'unauthenticated', token: undefined, user: undefined })
             return false;

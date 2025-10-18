@@ -1,14 +1,30 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParams } from '../../../routes/StackNavigator';
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
 import { useEffect } from 'react';
 import { User } from '../entities/user';
-
+import { API_URL } from '@env';
 
 const { width } = Dimensions.get('window');
+
+interface InformacionUsuario {
+  numPropuestas?: any;
+  numVotos?: any;
+  numComentarios?: any;
+}
+
+// Define la interfaz para los items del menú
+interface MenuItem {
+  id: number;
+  title: string;
+  screen: string;
+  icon: string;
+  color: string;
+  description: string;
+}
 
 export const Usuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
@@ -16,9 +32,66 @@ export const Usuario = () => {
   const [usuario, setUsuario] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [apoyos, setApoyos] = useState(0);
+  const [implementadas, setImplementadas] = useState(0);
+  const [propuestas, setPropuestas] = useState(0);
+  
+  // SOLUCIÓN: Especifica el tipo MenuItem[]
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
+  useEffect(() => {
+    const loadUserComentariosYTotales = async () => {
+      try {
+        setLoading(true);
 
+        const userJson = await StorrageAdater.getItem('user');
+        console.log('User encontrado (JSON):', userJson);
 
+        const token = await StorrageAdater.getItem('token');
+
+        if (!userJson || !token) {
+          Alert.alert('Error', 'No se encontraron datos de usuario o token');
+          setLoading(false);
+          return;
+        }
+
+        const usersData: User = JSON.parse(userJson);
+        setUsuario(usersData);
+
+        const response = await fetch(`${API_URL}/usuario/informacion/${usersData.id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const result: InformacionUsuario = await response.json();
+        console.log('InformacionUsuario', result.numVotos, result.numPropuestas, result.numComentarios);
+        setApoyos(result.numVotos);
+        setImplementadas(result.numComentarios);
+        setPropuestas(result.numPropuestas);
+
+        console.log('Datos cargados:', result);
+
+      } catch (error) {
+        console.error('Error cargando información:', error);
+        Alert.alert('Error', 'No se pudieron cargar los datos del usuario');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadUserComentariosYTotales();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -28,7 +101,6 @@ export const Usuario = () => {
         console.log('User encontrado (JSON):', userJson);
 
         if (userJson) {
-          // PARSEAR el JSON a objeto User
           const userData: User = JSON.parse(userJson);
           setUsuario(userData);
           console.log('User parseado:', userData);
@@ -48,51 +120,74 @@ export const Usuario = () => {
   // Este useEffect se ejecutará cuando "usuario" cambie
   useEffect(() => {
     console.log('Usuario actualizado:', usuario);
-  }, [usuario]); // ← Se ejecuta cuando "usuario" cambia
+    
+    const menu: MenuItem[] = [ // ← Especifica el tipo aquí también
+      {
+        id: 1,
+        title: 'Realizar Propuesta',
+        screen: 'RealizarPropuesta',
+        icon: 'hand-left-outline',
+        color: '#3498db',
+        description: 'Crea una nueva propuesta para mejorar la ciudad'
+      },
+      {
+        id: 2,
+        title: 'Tus Propuestas',
+        screen: 'TusPropuestas',
+        icon: 'list-outline',
+        color: '#2ecc71',
+        description: 'Revisa el estado de tus propuestas enviadas'
+      },
+      {
+        id: 3,
+        title: 'Lista de Propuestas',
+        screen: 'ListaPropuestas',
+        icon: 'library-outline',
+        color: '#9b59b6',
+        description: 'Explora todas las propuestas de la comunidad'
+      },
+      {
+        id: 4,
+        title: 'Editar Usuario',
+        screen: 'EditarUsuario',
+        icon: 'build-outline',
+        color: '#9b59b6',
+        description: 'Edita tus datos'
+      },
+      {
+        id: 5,
+        title: 'Darse de baja',
+        screen: 'Baja',
+        icon: 'trash-outline',
+        color: '#e74c3c',
+        description: 'Darse de baja'
+      }
+    ];
 
-  console.log('Renderizando con usuario:', usuario); // ← Este se ejecuta en cada render
-  const menuItems = [
-    {
-      id: 1,
-      title: 'Realizar Propuesta',
-      screen: 'RealizarPropuesta',
-      icon: 'hand-left-outline',
-      color: '#3498db',
-      description: 'Crea una nueva propuesta para mejorar la ciudad'
-    },
-    {
-      id: 2,
-      title: 'Tus Propuestas',
-      screen: 'TusPropuestas',
-      icon: 'list-outline',
-      color: '#2ecc71',
-      description: 'Revisa el estado de tus propuestas enviadas'
-    },
-    {
-      id: 3,
-      title: 'Lista de Propuestas',
-      screen: 'ListaPropuestas',
-      icon: 'library-outline',
-      color: '#9b59b6',
-      description: 'Explora todas las propuestas de la comunidad'
-    },
-    {
-      id: 4,
-      title: 'Editar Usuario',
-      screen: 'EditarUsuario',
-      icon: 'build-outline',
-      color: '#9b59b6',
-      description: 'Edita tus datos'
-    },
-    {
-      id: 5,
-      title: 'Darse de baja',
-      screen: 'Baja',
-      icon: 'trash-outline',
-      color: '#9b59b6',
-      description: 'Darse de baja'
+    // Si el usuario es administrador, agregamos el item de administrador
+    if (usuario?.role === 'ROLE_ADMIN') {
+      const menuConAdmin: MenuItem[] = [
+        ...menu,
+        {
+          id: 10,
+          title: 'Administrador',
+          screen: 'Administrador',
+          icon: 'settings-outline',
+          color: '#f39c12',
+          description: 'Menú de administración'
+        }
+      ];
+      setMenuItems(menuConAdmin);
+    } else {
+      setMenuItems(menu);
     }
-  ];
+
+  }, [usuario]);
+
+  // ... resto del código (return y styles) igual
+
+
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -101,7 +196,7 @@ export const Usuario = () => {
           <Icon name="person" size={40} color="#fff" />
         </View>
         <Text style={styles.title}>!Hola {usuario?.username || 'Usuario'}!</Text>
-       
+
         <Text style={styles.subtitle}>¿Qué te gustaría hacer hoy?</Text>
       </View>
 
@@ -137,15 +232,15 @@ export const Usuario = () => {
         <Text style={styles.sectionTitle}>Tu actividad</Text>
         <View style={styles.statsGrid}>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>5</Text>
+            <Text style={styles.statNumber}>{propuestas}</Text>
             <Text style={styles.statLabel}>Propuestas</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>124</Text>
+            <Text style={styles.statNumber}>{apoyos}</Text>
             <Text style={styles.statLabel}>Apoyos</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>3</Text>
+            <Text style={styles.statNumber}>{implementadas}</Text>
             <Text style={styles.statLabel}>Implementadas</Text>
           </View>
         </View>

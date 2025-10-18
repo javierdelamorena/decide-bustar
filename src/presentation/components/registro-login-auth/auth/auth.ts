@@ -9,7 +9,9 @@ const returnUserToken = (data: AuthResponse) => {
         email: data.email,
         username: data.username,
         apellidos: data.apellidos,
-        direccion:data.direccion
+        direccion:data.direccion,
+        role:data.role
+        
         
        
     }
@@ -20,11 +22,11 @@ const returnUserToken = (data: AuthResponse) => {
 
 }
 
-export const authLogin = async (username: string, password: string) => {
+export const authLogin = async (email: string, password: string) => {
     try {
 
         const { data } = await tesloApi.post<AuthResponse>('/auth/login', {
-            username, password
+            email, password
         })
         return returnUserToken(data)
         

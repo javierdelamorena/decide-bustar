@@ -1,7 +1,75 @@
 import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
+  container: {
+        flex: 1,
+        backgroundColor: '#f8f9fa',
+    },
+    menuContainer: {
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+    },
+    userCard: {
+        marginBottom: 15,
+        borderRadius: 15,
+        backgroundColor: '#ffffff',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+        elevation: 5,
+        overflow: 'hidden',
+    },
+    pressableCard: {
+        borderRadius: 15,
+    },
+    userCardContent: {
+        padding: 20,
+    },
+    userName: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#2c3e50',
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    userInfoContainer: {
+        gap: 12,
+    },
+    infoRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginBottom: 8,
+    },
+    infoLabel: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#7f8c8d',
+        width: 80,
+        marginRight: 10,
+    },
+    infoValue: {
+        fontSize: 14,
+        color: '#2c3e50',
+        flex: 1,
+        lineHeight: 20,
+    },
 
+
+
+// Agrega esto a tus estilos
+coloredCard: {
+    backgroundColor: '#3498db',
+},
+coloredText: {
+    color: '#ffffff',
+},
+coloredLabel: {
+    color: 'rgba(255, 255, 255, 0.8)',
+},
 
     centerContainer: {
         flex: 1,
@@ -21,16 +89,8 @@ export const globalStyles = StyleSheet.create({
         height: 100,
         marginBottom: 20,
     },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: '#666',
-    },
+
+ 
     formContainer: {
         marginBottom: 30,
     },
@@ -198,5 +258,120 @@ export const globalStyles = StyleSheet.create({
         margin: 10
 
     },
+  header: {
+    alignItems: 'center',
+    padding: 30,
+    backgroundColor: '#ffffff',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  avatarContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#3498db',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#2c3e50',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#7f8c8d',
+  },
+ 
+  menuCard: {
+    borderRadius: 15,
+    marginBottom: 15,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  menuTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: 4,
+  },
+  menuDescription: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  statsContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    padding: 20,
+    marginHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#2c3e50',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#3498db',
+    marginBottom: 5,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#7f8c8d',
+    textAlign: 'center',
+  },
 
 })

@@ -1,4 +1,4 @@
-import { API_URL_ANDROID, API_URL_IOS, API_URL as PROD_URL, STAGE } from "@env";
+import { API_URL_ANDROID, API_URL_IOS, API_URL as PROD_URL, STAGE,idPueblo } from "@env";
 import axios from "axios";
 import { Platform } from "react-native";
 

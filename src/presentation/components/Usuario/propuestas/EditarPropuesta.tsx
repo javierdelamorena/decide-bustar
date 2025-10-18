@@ -4,7 +4,7 @@ import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../../../theme/global.style';
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { API_URL } from '@env';
+import { API_URL, idPueblo } from '@env';
 import { RootStackParams } from '../../../routes/StackNavigator';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { cargarTusPropuestas } from './usepropuestas';
@@ -78,7 +78,8 @@ export const EditarPropuesta = () => {
         titulo: formData.titulo.trim(),
         descripcion: formData.descripcion.trim(),
         idUsuario: userData.id, 
-        idPropuesta:idPropuesta
+        idPropuesta:idPropuesta,
+        idPueblo:idPueblo
 
       };
 
