@@ -125,7 +125,7 @@ export const Usuario = () => {
       {
         id: 1,
         title: 'Realizar Propuesta',
-        screen: 'RealizarPropuesta',
+        screen: 'Departamentos',
         icon: 'hand-left-outline',
         color: '#3498db',
         description: 'Crea una nueva propuesta para mejorar la ciudad'

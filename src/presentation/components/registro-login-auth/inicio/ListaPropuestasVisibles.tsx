@@ -4,7 +4,7 @@ import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Activi
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParams } from '../../../routes/StackNavigator';
-import { propuestas } from '../../propuestas/propuestaResponse';
+import { propuestas, propuestasVisibles } from '../../propuestas/propuestaResponse';
 
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
 import { API_URL } from '../../../../api/tesloApi';
@@ -25,7 +25,7 @@ export const ListaPropuestasVisibles = () => {
     setError(null);
 
     try {
-      const resultado = await propuestas();
+      const resultado = await propuestasVisibles();
       setData(resultado);
     } catch (err) {
       console.error('Error al cargar propuestas:', err);
@@ -37,10 +37,10 @@ export const ListaPropuestasVisibles = () => {
   };
 
   // Cargar datos al montar el componente
-  useEffect(() => {
+  
+ useEffect(() => {
     loadPropuestas();
   }, []);
-
   // Resto de tu componente...
 
   // Mostrar loading
@@ -80,11 +80,13 @@ export const ListaPropuestasVisibles = () => {
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.titulo}</Text>
                 <Text style={styles.itemDescription}>{item.descripcion}</Text>
+                
 
                 <View style={styles.itemFooter}>
                   <View style={styles.userContainer}>
                     <Icon name="person-outline" size={16} color="#3498db" />
                     <Text style={styles.userText}>Usuario {item.idUsuario}</Text>
+                    <Text style={styles.itemDescription}>{item.nombreConcejalia}</Text>
                   </View>
                   <Text style={styles.dateText}>
                     {item.fecha ? new Date(item.fecha).toLocaleDateString() : 'Sin fecha'}

@@ -18,7 +18,7 @@ export const EditarPropuesta = () => {
 
   const { idPropuesta, titulo, descripcion } = route.params || {};
 
-  console.log('datos de mis propuestas idPropuesta, titulo, descripcion ',idPropuesta, titulo, descripcion )
+  console.log('datos de mis propuestas idPropuesta, titulo, descripcion ', idPropuesta, titulo, descripcion)
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: ''
@@ -77,9 +77,9 @@ export const EditarPropuesta = () => {
       const datosCompletos = {
         titulo: formData.titulo.trim(),
         descripcion: formData.descripcion.trim(),
-        idUsuario: userData.id, 
-        idPropuesta:idPropuesta,
-        idPueblo:idPueblo
+        idUsuario: userData.id,
+        idPropuesta: idPropuesta,
+        idPueblo: idPueblo
 
       };
 
@@ -104,23 +104,67 @@ export const EditarPropuesta = () => {
       setFormData({ titulo: result.titulo, descripcion: result.descripcion });
 
 
-      
-     
 
-    
+
+
+
 
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', 'No se pudo crear la propuesta');
+      Alert.alert('Error', 'No se pudo editar la propuesta');
     } finally {
       setEnviando(false);
     }
   };
-  
-    
-      
-        
-     
+ const handleDelete = async () => {
+  // Confirmación rápida
+  Alert.alert(
+    'Confirmar',
+    '¿Borrar esta propuesta?',
+    [
+      { text: 'No', style: 'cancel' },
+      { 
+        text: 'Sí, borrar', 
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            setEnviando(true);
+            const userJson = await StorrageAdater.getItem('user');
+            const token = await StorrageAdater.getItem('token');
+            
+            if (!userJson || !token) {
+              throw new Error('Datos de usuario incompletos');
+            }
+
+            const userData = JSON.parse(userJson);
+            const response = await fetch(`${API_URL}/propuestas/${idPropuesta}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+            });
+
+            if (!response.ok) throw new Error(`Error ${response.status}`);
+            
+            Alert.alert(' Éxito', 'Propuesta borrada');
+            navigation.navigate("TusPropuestas");
+            
+          } catch (error) {
+            Alert.alert('Error', 'No se pudo borrar');
+          } finally {
+            setEnviando(false);
+          }
+        }
+      }
+    ]
+  );
+};
+
+
+
+
+
 
   return (
     <ScrollView style={styles.container}>
@@ -157,7 +201,20 @@ export const EditarPropuesta = () => {
           disabled={enviando} // ← Deshabilitar durante envío
           loading={enviando} // ← Mostrar loading
         >
-          {enviando ? 'Enviando...' : 'Enviar Propuesta'}
+          {enviando ? 'Enviando...' : 'Editar Propuesta'}
+
+        </Button>
+        <Text style={styles.charCounter}>
+
+        </Text>
+        <Button
+          mode="contained"
+          onPress={handleDelete}
+          style={globalStyles.eyeButton}
+          disabled={enviando} // ← Deshabilitar durante envío
+          loading={enviando} // ← Mostrar loading
+        >
+          {enviando ? 'Enviando...' : 'Borrar Propuesta'}
 
         </Button>
       </View>

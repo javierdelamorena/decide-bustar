@@ -7,8 +7,7 @@ export const API_URL =
 
 // DEBUG EXTREMO
 console.log('URL de la API:', API_URL);
-console.log('Platform.OS:', Platform.OS);
-console.log(' STAGE:', STAGE);
+
 
 export const tesloApi = axios.create({
   baseURL: API_URL,
@@ -21,9 +20,7 @@ export const tesloApi = axios.create({
 tesloApi.interceptors.request.use((config) => {
   console.log('ENVIANDO REQUEST:');
  
-  console.log(' Método:', config.method?.toUpperCase());
-  console.log('Datos:', config.data);
-  console.log('Headers:', config.headers);
+  
   return config;
 });
 
@@ -31,16 +28,12 @@ tesloApi.interceptors.request.use((config) => {
 tesloApi.interceptors.response.use(
   (response) => {
     
-    console.log('Status:', response.status);
-    console.log('Data:', response.data);
+    
     return response;
   },
   (error) => {
     console.log('ERROR:');
-    console.log('Mensaje:', error.message);
-    console.log('Código:', error.code);
-    console.log('Config:', error.config?.baseURL + error.config?.url);
-    console.log('Request data:', error.config?.data);
+    
     
     if (error.response) {
       console.log('Response error:', error.response.status, error.response.data);

@@ -5,8 +5,11 @@ export interface Propuestas {
     idPropuesta: string;
     descripcion: string;
     titulo:string
-    fecha: string;
+    fecha: Date;
     idPueblo:number;
+    nombre:string;
+    presupuestoEstimado:number;
+    subencion:string;
     
 
 

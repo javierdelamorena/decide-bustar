@@ -17,6 +17,9 @@ import { Usuarios } from '../components/Administrador/Usuarios';
 import { PropuestasAdministrador } from '../components/Administrador/PropuestasAdministrador';
 import ListaUsuariosporpropuesta from '../components/Administrador/ListaUsuariosporpropuesta';
 import { RecuperarContraseña } from '../components/registro-login-auth/inicio/RecuperarContraseña';
+import { DepartamentoPropuesta } from '../components/Usuario/propuestas/DepartamentoPropuesta';
+
+
 
 
 export type RootStackParams = {
@@ -26,7 +29,7 @@ export type RootStackParams = {
   Counter: undefined,
   ChatPropuesta?: { idPropuesta: number, idUsuario: number },
   Usuario: undefined,
-  RealizarPropuesta: undefined,
+  RealizarPropuesta?: { idConcejalia: number, nombre: string},
   TusPropuestas: undefined,
   ListaPropuestas: undefined,
   EditarUsuario: undefined,
@@ -37,7 +40,8 @@ export type RootStackParams = {
   Usuarios: undefined;
   PropuestasAdministrador: undefined;
   ListaUsuariosporpropuesta?: { idPropuesta: number }
-  RecuperarContraseña: undefined
+  RecuperarContraseña: undefined,
+  Departamentos?:{idUsuario: number }
 
 
 }
@@ -65,6 +69,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="Usuarios" component={Usuarios} />
       <Stack.Screen name="PropuestasAdministrador" component={PropuestasAdministrador} />
       <Stack.Screen name="ListaUsuariosporpropuesta" component={ListaUsuariosporpropuesta} />
+      <Stack.Screen name="Departamentos" component={DepartamentoPropuesta} />
       <Stack.Screen name="RecuperarContraseña" component={RecuperarContraseña} />
 
 

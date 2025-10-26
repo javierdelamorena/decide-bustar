@@ -1,4 +1,4 @@
-package com.myfirstapp
+package com.DecideBustar
 
 import android.app.Application
 import com.facebook.react.PackageList

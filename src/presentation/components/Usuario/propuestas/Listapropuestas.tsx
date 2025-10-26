@@ -93,14 +93,17 @@ export const ListaPropuestas = () => {
               onPress={() => navigation.navigate('ChatPropuesta', { idPropuesta: item.idPropuesta, idUsuario: item.idUsuario })}
             >
               <View style={styles.itemContent}>
-                <Text style={styles.itemTitle}>{item.titulo}</Text>
+                <Text style={styles.itemDescription}>Departamento: {item.nombre}</Text>
+                <Text style={styles.itemTitle}>{item.titulo}{item.nombreConcejalia}</Text>
                 <Text style={styles.itemDescription}>{item.descripcion}</Text>
+                
 
                 <View style={styles.itemFooter}>
                   <View style={styles.userContainer}>
                     <Icon name="person-outline" size={16} color="#3498db" />
                     <Text style={styles.userText}>Usuario {item.idUsuario}</Text>
                   </View>
+                   
                   <Text style={styles.dateText}>
                     {item.fecha ? new Date(item.fecha).toLocaleDateString() : 'Sin fecha'}
                   </Text>

@@ -7,6 +7,7 @@ import { Button, Text } from 'react-native-paper';
 import { PropuestaUsuario } from '../../interfaces/PropuestaUsuario';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../routes/StackNavigator';
+import { generatePDF } from 'react-native-html-to-pdf';
 
 
 
@@ -28,13 +29,13 @@ export const PropuestasAdministrador = () => {
         if (userJson) {
             const userData = JSON.parse(userJson);
             // ← Guardar en estado
-            console.log('User parseado:', userData);
+            // console.log('User parseado:', userData);
         } else {
             console.log('No se encontró user en storage');
         }
 
 
-        const result = await fetch(API_URL + '/propuestas/lista', {
+        const result = await fetch(`${API_URL}/propuestas/lista`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

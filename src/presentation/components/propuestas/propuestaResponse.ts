@@ -11,18 +11,19 @@ interface Propuestas {
     idUsuario: string,
     titulo: string,
     fecha: string
+    nombreConcejalia: string
 
 
 }
 
 
 export const propuestas = async () => {
-   return StorrageAdater.getItem('token')
+    return StorrageAdater.getItem('token')
         .then(token => {
             if (!token) {
                 throw new Error('No se encontró token de autenticación');
             }
-            return fetch(API_URL + '/propuestas/lista', {
+            return fetch(`${API_URL}/propuestas/lista`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -30,6 +31,24 @@ export const propuestas = async () => {
                 }
             });
         })
+        .then(response => {
+            if (!response.ok) {
+                return [];
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+}
+export const propuestasVisibles = async () => {
+
+    return fetch(`${API_URL}/propuestas/lista`, {
+        method: 'GET',
+        headers: {
+
+            'Content-Type': 'application/json'
+        }
+    })
+
         .then(response => {
             if (!response.ok) {
                 return [];
