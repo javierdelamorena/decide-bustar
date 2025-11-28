@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1043771422777",
+    "project_id": "decidebustar-5f964",
+    "storage_bucket": "decidebustar-5f964.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043771422777:android:8b8c3744aef9c88d6bb5e8",
+        "android_client_info": {
+          "package_name": "com.DecideBustar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLCM_NfxYhl3HjW718fwzWMM-Lo7_KUII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
