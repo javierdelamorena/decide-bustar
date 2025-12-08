@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
-  container: {
+    container: {
         flex: 1,
         backgroundColor: '#f8f9fa',
     },
@@ -60,16 +60,16 @@ export const globalStyles = StyleSheet.create({
 
 
 
-// Agrega esto a tus estilos
-coloredCard: {
-    backgroundColor: '#3498db',
-},
-coloredText: {
-    color: '#ffffff',
-},
-coloredLabel: {
-    color: 'rgba(255, 255, 255, 0.8)',
-},
+    // Agrega esto a tus estilos
+    coloredCard: {
+        backgroundColor: '#3498db',
+    },
+    coloredText: {
+        color: '#ffffff',
+    },
+    coloredLabel: {
+        color: 'rgba(255, 255, 255, 0.8)',
+    },
 
     centerContainer: {
         flex: 1,
@@ -90,7 +90,7 @@ coloredLabel: {
         marginBottom: 20,
     },
 
- 
+
     formContainer: {
         marginBottom: 30,
     },
@@ -258,87 +258,421 @@ coloredLabel: {
         margin: 10
 
     },
-  header: {
-    alignItems: 'center',
-    padding: 30,
-    backgroundColor: '#ffffff',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    header: {
+        alignItems: 'center',
+        padding: 30,
+        backgroundColor: '#ffffff',
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+        marginBottom: 20,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-    marginBottom: 20,
-  },
-  avatarContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#3498db',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#2c3e50',
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#7f8c8d',
-  },
- 
-  menuCard: {
-    borderRadius: 15,
-    marginBottom: 15,
+    avatarContainer: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        backgroundColor: '#3498db',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: '800',
+        color: '#2c3e50',
+        marginBottom: 5,
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#7f8c8d',
+    },
+
+    menuCard: {
+        borderRadius: 15,
+        marginBottom: 15,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    iconContainer: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 15,
+    },
+    textContainer: {
+        flex: 1,
+    },
+    menuTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#fff',
+        marginBottom: 4,
+    },
+    menuDescription: {
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.8)',
+    },
+    statsContainer: {
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        padding: 20,
+        marginHorizontal: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: '700',
+        color: '#2c3e50',
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    statsGrid: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    statItem: {
+        alignItems: 'center',
+    },
+    statNumber: {
+        fontSize: 24,
+        fontWeight: '800',
+        color: '#3498db',
+        marginBottom: 5,
+    },
+    statLabel: {
+        fontSize: 12,
+        color: '#7f8c8d',
+        textAlign: 'center',
+    },
+
+})
+
+export const globalStylesLista = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: '#f8f9fa',
+    },
+    centerContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    loadingText: {
+        marginTop: 16,
+        fontSize: 16,
+        color: '#7f8c8d',
+    },
+    header: {
+        padding: 20,
+        paddingBottom: 10,
+        backgroundColor: '#ffffff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e9ecef',
+    },
+    headerTitle: {
+        fontSize: 28,
+        fontWeight: '800',
+        color: '#2c3e50',
+        marginBottom: 5,
+    },
+    headerSubtitle: {
+        fontSize: 16,
+        color: '#7f8c8d',
+    },
+    errorBanner: {
+        backgroundColor: '#e74c3c',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        marginHorizontal: 16,
+        marginTop: 10,
+        borderRadius: 8,
+    },
+    errorBannerText: {
+        color: '#fff',
+        marginLeft: 8,
+        fontSize: 14,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        padding: 16,
+        paddingBottom: 20,
+    },
+    item: {
+        backgroundColor: '#ffffff',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    itemContent: {
+        flex: 1,
+    },
+    itemTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#2c3e50',
+        marginBottom: 6,
+    },
+    itemDescription: {
+        fontSize: 14,
+        color: '#7f8c8d',
+        marginBottom: 12,
+        lineHeight: 20,
+    },
+    itemFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+    },
+    userContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#ebf5fb',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
+    userText: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: '#3498db',
+        marginLeft: 4,
+    },
+    dateText: {
+        fontSize: 12,
+        color: '#95a5a6',
+    },
+    arrowContainer: {
+        marginLeft: 8,
+    },
+    fab: {
+        position: 'absolute',
+        width: 56,
+        height: 56,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 20,
+        bottom: 20,
+        backgroundColor: '#3498db',
+        borderRadius: 28,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    archivoButton: {
+        backgroundColor: '#f0f8ff',
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#3498db',
+        marginHorizontal: 4,
+    },
+    archivoContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    archivoText: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: '#3498db',
+        marginLeft: 4,
+    },
+
+
+})
+
+export const globalStylesTusPropuestas = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: '#f8f9fa',
+    },
+    centrado: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    textoVacio: {
+        fontSize: 18,
+        color: '#7f8c8d',
+        marginTop: 16,
+        textAlign: 'center',
+    },
+    textoVacioSub: {
+        fontSize: 14,
+        color: '#bdc3c7',
+        marginTop: 8,
+        textAlign: 'center',
+    },
+    header: {
+        padding: 20,
+        paddingBottom: 10,
+        backgroundColor: '#ffffff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e9ecef',
+    },
+    headerTitle: {
+        fontSize: 28,
+        fontWeight: '800',
+        color: '#2c3e50',
+        marginBottom: 5,
+    },
+    headerSubtitle: {
+        fontSize: 16,
+        color: '#7f8c8d',
+    },
+    listContent: {
+        paddingHorizontal: 16,
+        paddingBottom: 20,
+    },
+    item: {
+        backgroundColor: '#ffffff',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    itemContent: {
+        flex: 1,
+    },
+    itemTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#2c3e50',
+        marginBottom: 6,
+    },
+    itemDescription: {
+        fontSize: 14,
+        color: '#7f8c8d',
+        marginBottom: 12,
+        lineHeight: 20,
+    },
+    itemFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    voteContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#ffeaea',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
+    voteText: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: '#e74c3c',
+        marginLeft: 4,
+    },
+    arrowContainer: {
+        marginLeft: 8,
+    },
+    fab: {
+        position: 'absolute',
+        width: 56,
+        height: 56,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 20,
+        bottom: 20,
+        backgroundColor: '#3498db',
+        borderRadius: 28,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+
+
+})
+
+export const globalStylesDepartamentoPropuestas = StyleSheet.create({
+
+    container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
-  cardContent: {
+  scrollView: {
+    flex: 1,
+    width: '100%',
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 20,
+  },
+  item: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  textContainer: {
-    flex: 1,
-  },
-  menuTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#fff',
-    marginBottom: 4,
-  },
-  menuDescription: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
-  },
-  statsContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 15,
-    padding: 20,
-    marginHorizontal: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -348,30 +682,32 @@ coloredLabel: {
     shadowRadius: 2,
     elevation: 2,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: 15,
+  welcomeText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
     textAlign: 'center',
   },
-  statsGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  buttonsContainer: {
+    width: '100%',
+    maxWidth: 300,
+    flex: 1,
   },
-  statItem: {
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  retryButton: {
+    backgroundColor: '#007AFF',
+    padding: 12,
+    borderRadius: 8,
     alignItems: 'center',
   },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#3498db',
-    marginBottom: 5,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#7f8c8d',
-    textAlign: 'center',
+  retryButtonText: {
+    color: 'white',
+    fontWeight: '600',
   },
 
-})
+    })

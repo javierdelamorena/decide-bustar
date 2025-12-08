@@ -1,2 +1,2 @@
-export * from '../../residuos/anuncios.ts';
+export * from './anuncios.ts';
 

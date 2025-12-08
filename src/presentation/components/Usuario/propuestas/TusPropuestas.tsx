@@ -1,96 +1,113 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StatusBar, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParams } from '../../../routes/StackNavigator';
-import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { API_URL } from '@env';
-import { propuestas } from '../../propuestas/propuestaResponse';
 import { cargarTusPropuestas } from './usepropuestas';
+import { globalStylesTusPropuestas } from '../../../theme/global.style';
+import { PropuestaUsuario } from '../../../interfaces/PropuestaUsuario';
 
-interface PropuestaUsuario {
-  titulo: string;
-  descripcion: string; // ← Corregí el nombre
-  total: number;
-  idPropuesta: number;
-  idUsuario: number;
-}
-
-export const TusPropuestas = () => { // ← Cambié a mayúscula
+export const TusPropuestas = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [cargando, setCargando] = useState(true);
-  const [propuestas, setPropuestas] = useState<PropuestaUsuario[]>([]); // ← Cambié a array
+  const [propuestas, setPropuestas] = useState<PropuestaUsuario[]>([]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // Se ejecuta cuando la pantalla recibe foco
-      console.log('Pantalla enfocada - recargando datos');
-      cargarDatos();
-    });
-
-    // Cleanup al desmontar
-    return unsubscribe;
-  }, [navigation]);
-
+  // Función para cargar datos
   const cargarDatos = async () => {
     setCargando(true);
     try {
+      console.log('📥 Cargando tus propuestas...');
       const datos = await cargarTusPropuestas();
-      setPropuestas(datos);
+      console.log('✅ Datos recibidos:', datos);
+      setPropuestas(datos || []); // Asegurar que siempre sea array
     } catch (error) {
-      console.error('Error al cargar:', error);
+      console.error('❌ Error al cargar propuestas:', error);
+      setPropuestas([]); // En caso de error, establecer array vacío
     } finally {
       setCargando(false);
     }
   };
 
-
   useEffect(() => {
-    cargarDatos(); // ← Corregí el nombre
-  }, []);
+    // Cargar datos al montar el componente
+    cargarDatos();
 
+    // Configurar listener para cuando la pantalla recibe foco
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('🔄 Pantalla enfocada - recargando datos');
+      cargarDatos();
+    });
 
+    // Cleanup
+    return unsubscribe;
+  }, [navigation]);
+
+  // Mostrar loading mientras carga
+  if (cargando) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={globalStylesTusPropuestas.container}>
+          <View style={globalStylesTusPropuestas.centrado}>
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text style={globalStylesTusPropuestas.textoVacio}>Cargando propuestas...</Text>
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container} edges={['top']}>
+      <SafeAreaView style={globalStylesTusPropuestas.container} edges={['top']}>
         <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
 
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Tus propuestas</Text>
-          <Text style={styles.headerSubtitle}>{propuestas.length} propuestas creadas</Text>
+        <View style={globalStylesTusPropuestas.header}>
+          <Text style={globalStylesTusPropuestas.headerTitle}>Tus propuestas</Text>
+          <Text style={globalStylesTusPropuestas.headerSubtitle}>
+            {propuestas.length} propuesta{propuestas.length !== 1 ? 's' : ''} creada{propuestas.length !== 1 ? 's' : ''}
+          </Text>
         </View>
 
         {propuestas.length === 0 ? (
-          <View style={styles.centrado}>
+          <View style={globalStylesTusPropuestas.centrado}>
             <Icon name="document-text-outline" size={64} color="#bdc3c7" />
-            <Text style={styles.textoVacio}>No has creado ninguna propuesta</Text>
-            <Text style={styles.textoVacioSub}>Crea tu primera propuesta para comenzar</Text>
+            <Text style={globalStylesTusPropuestas.textoVacio}>No has creado ninguna propuesta</Text>
+            <Text style={globalStylesTusPropuestas.textoVacioSub}>
+              Crea tu primera propuesta para comenzar
+            </Text>
           </View>
         ) : (
-          <ScrollView style={styles.listContent}>
+          <ScrollView style={globalStylesTusPropuestas.listContent}>
             {propuestas.map((propuesta, index) => (
               <TouchableOpacity
-                key={propuesta.idPropuesta || index}
-                style={styles.item}
-                onPress={() => navigation.navigate('EditarPropuesta', { idPropuesta: propuesta.idPropuesta || index, titulo: propuesta.titulo, descripcion: propuesta.descripcion })}
+                key={propuesta.idPropuesta?.toString() || `propuesta-${index}`}
+                style={globalStylesTusPropuestas.item}
+                onPress={() => navigation.navigate('EditarPropuesta', { 
+                  idPropuesta: propuesta.idPropuesta || index, 
+                  titulo: propuesta.titulo || '', 
+                  descripcion: propuesta.descripcion || '',
+                  presupuesto: propuesta.presupuesto , // ← Corregido
+                  subencion: propuesta.subencion || propuesta.subencion || '' ,// ← Corregido
+                  total:propuesta.total,
+                  idConcejalia:propuesta.idConcejalia
+                })}
               >
-                <View style={styles.itemContent}>
-                  <Text style={styles.itemTitle} numberOfLines={1}>
+                <View style={globalStylesTusPropuestas.itemContent}>
+                  <Text style={globalStylesTusPropuestas.itemTitle} numberOfLines={1}>
                     {propuesta.titulo || 'Sin título'}
                   </Text>
-                  <Text style={styles.itemDescription} numberOfLines={2}>
+                  <Text style={globalStylesTusPropuestas.itemDescription} numberOfLines={2}>
                     {propuesta.descripcion || 'Sin descripción'}
                   </Text>
-                  <View style={styles.itemFooter}>
-                    <View style={styles.voteContainer}>
+                  <View style={globalStylesTusPropuestas.itemFooter}>
+                    <View style={globalStylesTusPropuestas.voteContainer}>
                       <Icon name="people-outline" size={14} color="#e74c3c" />
-                      <Text style={styles.voteText}>
-                        {propuesta.total || 0} votos
+                      <Text style={globalStylesTusPropuestas.voteText}>
+                        {propuesta.total ?? propuesta.total ?? 0} votos
                       </Text>
                     </View>
-                    <View style={styles.arrowContainer}>
+                    <View style={globalStylesTusPropuestas.arrowContainer}>
                       <Icon name="chevron-forward-outline" size={16} color="#bdc3c7" />
                     </View>
                   </View>
@@ -101,7 +118,7 @@ export const TusPropuestas = () => { // ← Cambié a mayúscula
         )}
 
         <TouchableOpacity
-          style={styles.fab}
+          style={globalStylesTusPropuestas.fab}
           onPress={() => navigation.navigate('RealizarPropuesta')}
         >
           <Icon name="add" size={24} color="white" />
@@ -109,125 +126,4 @@ export const TusPropuestas = () => { // ← Cambié a mayúscula
       </SafeAreaView>
     </SafeAreaProvider>
   );
-
-}
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f9fa',
-  },
-  centrado: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  textoVacio: {
-    fontSize: 18,
-    color: '#7f8c8d',
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  textoVacioSub: {
-    fontSize: 14,
-    color: '#bdc3c7',
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  header: {
-    padding: 20,
-    paddingBottom: 10,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e9ecef',
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#2c3e50',
-    marginBottom: 5,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: '#7f8c8d',
-  },
-  listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 20,
-  },
-  item: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  itemContent: {
-    flex: 1,
-  },
-  itemTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: 6,
-  },
-  itemDescription: {
-    fontSize: 14,
-    color: '#7f8c8d',
-    marginBottom: 12,
-    lineHeight: 20,
-  },
-  itemFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  voteContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffeaea',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  voteText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#e74c3c',
-    marginLeft: 4,
-  },
-  arrowContainer: {
-    marginLeft: 8,
-  },
-  fab: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 20,
-    bottom: 20,
-    backgroundColor: '#3498db',
-    borderRadius: 28,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-});
+};

@@ -41,13 +41,7 @@ export const Baja = () => {
     try {
 
 
-      // 1. Eliminar propuestas del usuario
-      await fetch(`${API_URL}/propuestas/borrarPropuestaUsuario/${userData?.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
+      
 
       // 2. Eliminar comentarios del usuario
       await fetch(`${API_URL}/comentarios/${userData?.id}`, {
@@ -57,13 +51,8 @@ export const Baja = () => {
         }
       });
 
-      // 3. Eliminar votos del usuario
-      await fetch(`${API_URL}/propuestas/borrarVotosPorUsuario/${userData?.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
+     
+     
 
       // 4. Finalmente eliminar el usuario
       await fetch(`${API_URL}/usuario/${userData?.id}`, {
@@ -92,8 +81,8 @@ export const Baja = () => {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.title}>Editar usuario</Text>
-          <Text style={styles.subtitle}>Edita tus Datos</Text>
+          <Text style={styles.title}>Darse de baja</Text>
+         
         </View>
 
         <View style={styles.header}>

@@ -8,8 +8,12 @@ export interface Propuestas {
     fecha: Date;
     idPueblo:number;
     nombre:string;
-    presupuestoEstimado:number;
+    presupuesto:number;
     subencion:string;
+    archivoRuta:string;
+    archivoNombre:string;
+
+
     
 
 

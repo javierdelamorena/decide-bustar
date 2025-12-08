@@ -12,10 +12,11 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { API_URL, idPueblo } from '@env';
+
+import { API_URL } from '@env';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { RootStackParams } from '../../../routes/StackNavigator';
+import { StorrageAdater } from '../../../adapters/Storage-adapter';
+import { RootStackParams } from '../../routes/StackNavigator';
 
 interface Comentario {
   id: number;
@@ -40,7 +41,7 @@ interface ComentariosPropuestas {
 
 type ChatPropuestaRouteProp = RouteProp<RootStackParams, 'ChatPropuesta'>;
 
-export const ChatPropuesta = () => {
+export const ChatPropuestaAdmin = () => {
   const route = useRoute<ChatPropuestaRouteProp>();
   const [comentario, setComentario] = useState('');
   const [propuesta, setPropuesta] = useState<ComentariosPropuestas | null>(null);
@@ -49,21 +50,21 @@ export const ChatPropuesta = () => {
 
   const { idPropuesta } = route.params || {};
 
+  // Cargar datos iniciales
   const cargarPropuesta = async () => {
     try {
       setCargando(true);
-      const token = await StorrageAdater.getItem('token');
-      if (!token) throw new Error('No se encontró token');
-       const userJson = await StorrageAdater.getItem('user');
-      if (!userJson) {
-        Alert.alert('Error', 'No se encontraron datos de usuario');
+      const [token, userJson] = await Promise.all([
+        StorrageAdater.getItem('token'),
+        StorrageAdater.getItem('user')
+      ]);
+
+      if (!token || !userJson) {
+        Alert.alert('Error', 'No se encontraron credenciales');
         return;
       }
 
       const userData = JSON.parse(userJson);
-
-
-
       const response = await fetch(`${API_URL}/propuestas/${idPropuesta}/${userData.id}`, {
         method: 'GET',
         headers: {
@@ -75,7 +76,6 @@ export const ChatPropuesta = () => {
       if (!response.ok) throw new Error(`Error ${response.status}`);
 
       const data: ComentariosPropuestas = await response.json();
-      console.log(data);
       setPropuesta(data);
     } catch (error) {
       Alert.alert('Error', 'No se pudo cargar la propuesta');
@@ -88,22 +88,20 @@ export const ChatPropuesta = () => {
     cargarPropuesta();
   }, []);
 
+  // Manejar votos
   const handleVotar = async (voto: number) => {
     try {
-      const token = await StorrageAdater.getItem('token');
-      if (!token) {
-        Alert.alert('Error', 'No se encontró el token');
-        return;
-      }
+      const [token, userJson] = await Promise.all([
+        StorrageAdater.getItem('token'),
+        StorrageAdater.getItem('user')
+      ]);
 
-      const userJson = await StorrageAdater.getItem('user');
-      if (!userJson) {
-        Alert.alert('Error', 'No se encontraron datos de usuario');
+      if (!token || !userJson) {
+        Alert.alert('Error', 'No se encontraron credenciales');
         return;
       }
 
       const userData = JSON.parse(userJson);
-
       const response = await fetch(`${API_URL}/propuestas/votar`, {
         method: "POST",
         headers: {
@@ -127,19 +125,20 @@ export const ChatPropuesta = () => {
     }
   };
 
+  // Enviar comentario
   const handleEnviarComentario = async () => {
     if (!comentario.trim() || !propuesta) return;
 
     try {
       setEnviando(true);
-      const token = await StorrageAdater.getItem('token');
-      if (!token) throw new Error('No se encontró token');
+      const [token, userJson] = await Promise.all([
+        StorrageAdater.getItem('token'),
+        StorrageAdater.getItem('user')
+      ]);
 
-      const userJson = await StorrageAdater.getItem('user');
-      if (!userJson) throw new Error('No se encontraron datos de usuario');
+      if (!token || !userJson) throw new Error('No se encontraron credenciales');
 
       const userData = JSON.parse(userJson);
-
       const response = await fetch(`${API_URL}/comentarios`, {
         method: 'POST',
         headers: {
@@ -150,8 +149,7 @@ export const ChatPropuesta = () => {
           comentario: comentario.trim(),
           idPropuesta: idPropuesta,
           idUsuario: userData.id,
-          username: userData.username,
-          idPueblo:idPueblo
+          username: userData.username
         })
       });
 
@@ -159,10 +157,10 @@ export const ChatPropuesta = () => {
 
       const nuevoComentario: Comentario = await response.json();
 
-      setPropuesta({
-        ...propuesta,
-        comentarios: [...propuesta.comentarios, nuevoComentario]
-      });
+      setPropuesta(prev => prev ? {
+        ...prev,
+        comentarios: [...prev.comentarios, nuevoComentario]
+      } : null);
 
       setComentario('');
       Alert.alert('Éxito', 'Comentario enviado');
@@ -174,14 +172,69 @@ export const ChatPropuesta = () => {
     }
   };
 
+  // Borrar comentario
+  const handleBorrarComentario = async (comentarioId: number) => {
+    Alert.alert(
+      'Eliminar Comentario',
+      '¿Estás seguro de que quieres eliminar este comentario?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { 
+          text: 'Eliminar', 
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const token = await StorrageAdater.getItem('token');
+              if (!token) throw new Error('No se encontró token');
+
+              const response = await fetch(`${API_URL}/comentarios/comentarioPorId/${comentarioId}`, {
+                method: 'DELETE',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              });
+
+              if (!response.ok) throw new Error(`Error ${response.status}`);
+
+              // Actualizar estado local
+              setPropuesta(prev => prev ? {
+                ...prev,
+                comentarios: prev.comentarios.filter(c => c.id !== comentarioId)
+              } : null);
+
+              Alert.alert('Éxito', 'Comentario eliminado');
+            } catch (error) {
+              Alert.alert('Error', 'No se pudo eliminar el comentario');
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  // Render de comentarios
   const renderComentario = ({ item }: { item: Comentario }) => (
     <View style={styles.comentarioContainer}>
-      <Text style={styles.comentarioUsuario}>{item.username}</Text>
-      <Text style={styles.comentarioTexto}>{item.comentario}</Text>
-      <Text style={styles.comentarioFecha}>{item.fecha}</Text>
+      <View style={styles.comentarioContent}>
+        <View style={styles.comentarioHeader}>
+          <Text style={styles.comentarioUsuario}>{item.username}</Text>
+          <TouchableOpacity 
+            onPress={() => handleBorrarComentario(item.id)}
+            style={styles.borrarButton}
+          >
+            <Icon name="trash-outline" size={16} color="#FF3B30" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.comentarioTexto}>{item.comentario}</Text>
+        <Text style={styles.comentarioFecha}>
+          {new Date(item.fecha).toLocaleDateString()}
+        </Text>
+      </View>
     </View>
   );
 
+  // Estados de carga
   if (cargando) {
     return (
       <View style={styles.centrado}>
@@ -200,6 +253,7 @@ export const ChatPropuesta = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.votosTexto}>Votos: {propuesta.totales || 0}</Text>
         <Text style={styles.titulo}>{propuesta.titulo}</Text>
@@ -207,7 +261,6 @@ export const ChatPropuesta = () => {
 
         <View style={styles.botonesContainer}>
           {propuesta.votoUsuario === 1 ? (
-            // Si ya votó, mostrar botón para quitar voto
             <TouchableOpacity
               style={styles.botonQuitar}
               onPress={() => handleVotar(0)}
@@ -216,7 +269,6 @@ export const ChatPropuesta = () => {
               <Text style={styles.botonTexto}>Quitar mi voto</Text>
             </TouchableOpacity>
           ) : (
-            // Si no ha votado, mostrar botón para votar
             <TouchableOpacity
               style={styles.botonVotar}
               onPress={() => handleVotar(1)}
@@ -228,6 +280,7 @@ export const ChatPropuesta = () => {
         </View>
       </View>
 
+      {/* Lista de comentarios */}
       <View style={styles.comentariosSection}>
         <Text style={styles.comentariosTitulo}>
           Comentarios ({propuesta.comentarios.length})
@@ -238,9 +291,11 @@ export const ChatPropuesta = () => {
           renderItem={renderComentario}
           keyExtractor={item => item.id.toString()}
           style={styles.lista}
+          showsVerticalScrollIndicator={false}
         />
       </View>
 
+      {/* Input para comentar */}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.inputContainer}
@@ -255,11 +310,18 @@ export const ChatPropuesta = () => {
             maxLength={500}
           />
           <TouchableOpacity
-            style={[styles.botonEnviar, !comentario.trim() && styles.botonDisabled]}
+            style={[
+              styles.botonEnviar, 
+              (!comentario.trim() || enviando) && styles.botonDisabled
+            ]}
             onPress={handleEnviarComentario}
             disabled={!comentario.trim() || enviando}
           >
-            <Icon name="send" size={20} color="#fff" />
+            <Icon 
+              name="send" 
+              size={20} 
+              color={!comentario.trim() || enviando ? "#999" : "#fff"} 
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -345,28 +407,39 @@ const styles = StyleSheet.create({
   },
   comentarioContainer: {
     backgroundColor: '#fff',
-    padding: 12,
     borderRadius: 8,
     marginBottom: 8,
     borderWidth: 1,
     borderColor: '#eee',
+    overflow: 'hidden',
+  },
+  comentarioContent: {
+    padding: 12,
+  },
+  comentarioHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   comentarioUsuario: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#2196F3',
-    marginBottom: 4,
   },
   comentarioTexto: {
     fontSize: 14,
     color: '#333',
     lineHeight: 18,
+    marginBottom: 8,
   },
   comentarioFecha: {
     fontSize: 12,
     color: '#999',
     textAlign: 'right',
-    marginTop: 4,
+  },
+  borrarButton: {
+    padding: 4,
   },
   inputContainer: {
     padding: 16,

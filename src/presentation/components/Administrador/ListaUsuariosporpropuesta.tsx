@@ -3,7 +3,7 @@ import { Alert, Pressable, ScrollView, Text, View } from 'react-native'
 import { User } from '../Usuario/entities/user';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../routes/StackNavigator';
-import { API_URL } from '@env';
+import { API_URL, idPueblo } from '@env';
 import { StorrageAdater } from '../../../adapters/Storage-adapter';
 import { globalStyles } from '../../theme/global.style';
 import { generatePDF } from 'react-native-html-to-pdf';
@@ -15,8 +15,6 @@ const ListaUsuariosporpropuesta = () => {
     const route = useRoute<ListaUsuariosporpropuestaProp>();
     const { idPropuesta } = route.params || {};
     const [userData, setUserData] = useState<User[]>([]);
-
-    // console.log('Este es el idpropuestas que mostrar los usuarios', idPropuesta)
 
     const generarHTML = (users: User[]) => {
         return `
@@ -120,7 +118,7 @@ const ListaUsuariosporpropuesta = () => {
                 return;
             }
 
-            const response = await fetch(`${API_URL}/propuestas/listaUsuarios/${idPropuesta}`, {
+            const response = await fetch(`${API_URL}/propuestas/listaUsuarios/${idPropuesta}/${idPueblo}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -146,7 +144,7 @@ const ListaUsuariosporpropuesta = () => {
     }, []);
 
     return (
-        <ScrollView style={[globalStyles.container]}>
+        <ScrollView style={globalStyles.container}>
             <View style={globalStyles.menuContainer}>
                 {userData.length > 0 ? (
                     userData.map((prop) => (
@@ -181,21 +179,23 @@ const ListaUsuariosporpropuesta = () => {
                         </View>
                     ))
                 ) : (
-                    <Text style={globalStyles.infoLabel}>No hay usuarios disponibles</Text>
+                    <View style={globalStyles.centerContainer}>
+                        <Text style={globalStyles.infoLabel}>No hay usuarios disponibles</Text>
+                    </View>
                 )}
                 
-                <Button
-                    mode="contained"
-                    onPress={generarPdfDeUsuarios}
-                    style={{ 
-                        marginTop: 20, 
-                        backgroundColor: '#6771c9',
-                        borderRadius: 10
-                    }}
-                    labelStyle={{ color: 'white', padding: 5 }}
-                >
-                    Generar PDF
-                </Button>
+                {userData.length > 0 && (
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            mode="contained"
+                            onPress={generarPdfDeUsuarios}
+                            style={globalStyles.presable}
+                            labelStyle={{ color: 'white' }}
+                        >
+                            Generar PDF
+                        </Button>
+                    </View>
+                )}
             </View>
         </ScrollView>
     )

@@ -161,6 +161,14 @@ export const Usuario = () => {
         icon: 'trash-outline',
         color: '#e74c3c',
         description: 'Darse de baja'
+      },
+      {
+        id: 6,
+        title: 'Configuracion ',
+        screen: 'Configuracion',
+        icon: 'settings-outline',
+        color: '#3ce7bcff',
+        description: 'Permicsos'
       }
     ];
 
@@ -169,7 +177,7 @@ export const Usuario = () => {
       const menuConAdmin: MenuItem[] = [
         ...menu,
         {
-          id: 10,
+          id: 7,
           title: 'Administrador',
           screen: 'Administrador',
           icon: 'settings-outline',

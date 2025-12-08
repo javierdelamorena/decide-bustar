@@ -18,6 +18,12 @@ import { PropuestasAdministrador } from '../components/Administrador/PropuestasA
 import ListaUsuariosporpropuesta from '../components/Administrador/ListaUsuariosporpropuesta';
 import { RecuperarContraseña } from '../components/registro-login-auth/inicio/RecuperarContraseña';
 import { DepartamentoPropuesta } from '../components/Usuario/propuestas/DepartamentoPropuesta';
+import { Configuracion } from '../components/settings/Configuracion';
+import { ChatPropuestaAdmin } from '../components/Administrador/ChatpropuestasAdmin';
+import { AnunciosCrear } from '../components/Administrador/AnunciosAdministrador/AnunciosCrear';
+import Anuncios from '../components/Administrador/AnunciosAdministrador/Anuncios';
+import ListaAnuncios from '../components/Tablonanuncios/ListaAnuncios';
+import ListaAnunciosAdministrador from '../components/Administrador/AnunciosAdministrador/ListaAnunciosAdministrador';
 
 
 
@@ -29,19 +35,25 @@ export type RootStackParams = {
   Counter: undefined,
   ChatPropuesta?: { idPropuesta: number, idUsuario: number },
   Usuario: undefined,
-  RealizarPropuesta?: { idConcejalia: number, nombre: string},
+  RealizarPropuesta?: { idConcejalia: number, nombre: string },
   TusPropuestas: undefined,
   ListaPropuestas: undefined,
   EditarUsuario: undefined,
   Propuestas: undefined,
   Baja: undefined,
-  EditarPropuesta?: { idPropuesta: number, titulo: string, descripcion: string },
+  EditarPropuesta?: { idPropuesta: number, titulo: string, descripcion: string, presupuesto: number, subencion: string, total: number,idConcejalia:number },
   Administrador: undefined;
   Usuarios: undefined;
   PropuestasAdministrador: undefined;
-  ListaUsuariosporpropuesta?: { idPropuesta: number }
-  RecuperarContraseña: undefined,
-  Departamentos?:{idUsuario: number }
+  ListaUsuariosporpropuesta?: { idPropuesta: number };
+  RecuperarContraseña: undefined;
+  Departamentos?: { idUsuario: number };
+  Configuracion: undefined;
+  ChatPropuestaAdmin?: { idPropuesta: number, idUsuario: number };
+  AnunciosCrear: undefined;
+  Anuncios: undefined;
+  ListaAnuncios: undefined;
+  ListaAnunciosAdministrador:undefined;
 
 
 }
@@ -58,6 +70,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Usuario" component={Usuario} />
       <Stack.Screen name="ChatPropuesta" component={ChatPropuesta} />
+      <Stack.Screen name="ChatPropuestaAdmin" component={ChatPropuestaAdmin} />
       <Stack.Screen name="RealizarPropuesta" component={RealizarPropuesta} />
       <Stack.Screen name="TusPropuestas" component={TusPropuestas} />
       <Stack.Screen name="ListaPropuestas" component={ListaPropuestas} />
@@ -71,6 +84,13 @@ export const StackNavigator = () => {
       <Stack.Screen name="ListaUsuariosporpropuesta" component={ListaUsuariosporpropuesta} />
       <Stack.Screen name="Departamentos" component={DepartamentoPropuesta} />
       <Stack.Screen name="RecuperarContraseña" component={RecuperarContraseña} />
+      <Stack.Screen name="Configuracion" component={Configuracion} />
+      <Stack.Screen name="AnunciosCrear" component={AnunciosCrear} />
+      <Stack.Screen name="Anuncios" component={Anuncios} />
+      <Stack.Screen name="ListaAnuncios" component={ListaAnuncios} />
+      <Stack.Screen name="ListaAnunciosAdministrador" component={ListaAnunciosAdministrador} />
+
+
 
 
 

@@ -1,44 +1,46 @@
 import React, { useState } from 'react';
 import {
-  Alert,
-  Image,
   ScrollView,
-  StyleSheet,
+  View,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  Alert,
+  StyleSheet,
+  Image
 } from 'react-native';
-import { Button } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
-import { globalStyles } from '../../../theme/global.style';
-import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { API_URL, idPueblo } from '@env';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParams } from '../../../routes/StackNavigator';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Button } from 'react-native-paper';
 import RNFS from 'react-native-fs';
+import { API_URL, idPueblo } from '@env';
+import { StorrageAdater } from '../../../../adapters/Storage-adapter';
+import { RootStackParams } from '../../../routes/StackNavigator';
 
+// Definir el tipo para los parámetros de la ruta
 
-type RealizarPropuestaRouteProp = RouteProp<RootStackParams, 'RealizarPropuesta'>;
 
 interface FormDataFields {
-  titulo: string;
-  descripcion: string;
-  presupuesto: string;
-  subencion: string;
+  anuncio: string;
+  titulo_anuncio: string;
+  nombre: string;
+  ruta: string;
+
 }
 
-export const RealizarPropuesta = () => {
-  const route = useRoute<RealizarPropuestaRouteProp>();
-  const { idConcejalia, nombre } = route.params || {};
+export const AnunciosCrear = () => {
+
+
+
 
   const [selectedFile, setSelectedFile] = useState<DocumentPickerResponse | null>(null);
   const [formData, setFormData] = useState<FormDataFields>({
-    titulo: '',
-    descripcion: '',
-    presupuesto: '',
-    subencion: '',
+    anuncio: '',
+    titulo_anuncio: '',
+    nombre: '',
+    ruta: ''
+
   });
   const [enviando, setEnviando] = useState(false);
 
@@ -46,7 +48,7 @@ export const RealizarPropuesta = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Selector de archivo (cualquier tipo)
+  // Selector de archivo
   const selectFile = async () => {
     try {
       const res = await DocumentPicker.pickSingle({
@@ -66,8 +68,8 @@ export const RealizarPropuesta = () => {
   const removeFile = () => setSelectedFile(null);
 
   const handleSubmit = async () => {
-    if (!formData.titulo || !formData.descripcion) {
-      Alert.alert('Error', 'Completa al menos el título y la descripción');
+    if (!formData.anuncio || !formData.titulo_anuncio) {
+      Alert.alert('Error', 'Completa todos los campos obligatorios');
       return;
     }
 
@@ -76,30 +78,32 @@ export const RealizarPropuesta = () => {
 
       const userJson = await StorrageAdater.getItem('user');
       if (!userJson) throw new Error('No se encontraron datos de usuario');
-console.log('idconcejalia',idConcejalia)
+
       const userData = JSON.parse(userJson);
       const token = await StorrageAdater.getItem('token');
       if (!token) throw new Error('No hay token de autenticación');
 
-      // ✅ Creamos FormData para incluir texto y archivo
+      // Creamos FormData para incluir texto y archivo
       const dataToSend = new FormData();
-      dataToSend.append('titulo', formData.titulo.trim());
-      dataToSend.append('descripcion', formData.descripcion.trim());
-      dataToSend.append('idUsuario', userData.id.toString());
-      dataToSend.append('username', userData.username);
-      dataToSend.append('idPueblo', idPueblo);
-      dataToSend.append('idConcejalia', idConcejalia);
-      dataToSend.append('nombre', nombre);
-      dataToSend.append('presupuesto', formData.presupuesto);
-      dataToSend.append('subencion', formData.subencion);
-
-     
       
- 
+      dataToSend.append('titulo_anuncio', formData.titulo_anuncio.trim());
+      dataToSend.append('anuncio', formData.anuncio.trim());
+      dataToSend.append('idPueblo', 1);
+      dataToSend.append('nombre', "");
+      dataToSend.append('ruta', "");
+
+
+      // Asegúrate de tener idPueblo disponible (puede venir de route.params o userData)
+      const puebloId = idPueblo;
+      if (puebloId) {
+        dataToSend.append('idPueblo', puebloId.toString());
+      }
+
+      // URL opcional si la tienes
+
+
       if (selectedFile?.uri) {
-
         const destPath = RNFS.TemporaryDirectoryPath + '/' + selectedFile.name;
-
         await RNFS.copyFile(selectedFile.uri, destPath);
         dataToSend.append('archivo', {
           uri: 'file://' + destPath,
@@ -109,23 +113,23 @@ console.log('idconcejalia',idConcejalia)
         console.log('Archivo temporal creado en:', destPath);
       }
 
-      const response = await fetch(`${API_URL}/propuestas/create`, {
+      // Cambiar la URL al endpoint de anuncios
+      const response = await fetch(`${API_URL}/anuncios/create`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-
         },
         body: dataToSend,
       });
 
       if (!response.ok) throw new Error(`Error ${response.status}`);
 
-      Alert.alert('Éxito', 'Propuesta creada correctamente');
-      setFormData({ titulo: '', descripcion: '', presupuesto: '', subencion: '' });
+      Alert.alert('Éxito', 'Anuncio creado correctamente');
+      setFormData({ anuncio: '', titulo_anuncio: '',nombre:'',ruta:'' });
       setSelectedFile(null);
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', 'No se pudo crear la propuesta');
+      Alert.alert('Error', 'No se pudo crear el anuncio');
     } finally {
       setEnviando(false);
     }
@@ -135,49 +139,31 @@ console.log('idconcejalia',idConcejalia)
     <ScrollView style={styles.container}>
       <View style={styles.formContainer}>
         <Text style={styles.titulo}>
-          Crear una Nueva Propuesta en el departamento de:
+          Crear un Nuevo Anuncio
         </Text>
-        <Text style={styles.tituloDepartamento}>{nombre}</Text>
 
         <TextInput
-          value={formData.titulo}
-          onChangeText={text => handleInputChange('titulo', text)}
+          value={formData.titulo_anuncio}
+          onChangeText={text => handleInputChange('titulo_anuncio', text)}
           style={styles.input}
           maxLength={100}
-          placeholder="Título de la propuesta"
+          placeholder="Título del anuncio"
           editable={!enviando}
         />
 
         <TextInput
-          value={formData.presupuesto}
-          onChangeText={text => handleInputChange('presupuesto', text)}
-          style={styles.input}
-          keyboardType="numeric"
-          placeholder="Presupuesto estimado..."
-          editable={!enviando}
-        />
-
-        <TextInput
-          value={formData.subencion}
-          onChangeText={text => handleInputChange('subencion', text)}
-          style={styles.input}
-          placeholder="Subvención (si la hay)..."
-          editable={!enviando}
-        />
-
-        <TextInput
-          value={formData.descripcion}
-          onChangeText={text => handleInputChange('descripcion', text)}
+          value={formData.anuncio}
+          onChangeText={text => handleInputChange('anuncio', text)}
           multiline
           numberOfLines={8}
           maxLength={2000}
           style={[styles.input, styles.textArea]}
-          placeholder="Describe tu propuesta..."
+          placeholder="Descripción del anuncio..."
           editable={!enviando}
         />
 
         <Text style={styles.charCounter}>
-          {formData.descripcion.length}/2000 caracteres
+          {formData.titulo_anuncio.length}/2000 caracteres
         </Text>
 
         {/* Sección archivo */}
@@ -225,11 +211,11 @@ console.log('idconcejalia',idConcejalia)
         <Button
           mode="contained"
           onPress={handleSubmit}
-          style={globalStyles.eyeButton}
+          style={styles.submitButton}
           disabled={enviando}
           loading={enviando}
         >
-          {enviando ? 'Enviando...' : 'Enviar Propuesta'}
+          {enviando ? 'Enviando...' : 'Crear Anuncio'}
         </Button>
       </View>
     </ScrollView>
@@ -237,37 +223,47 @@ console.log('idconcejalia',idConcejalia)
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
-  formContainer: { padding: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5'
+  },
+  formContainer: {
+    padding: 20
+  },
   titulo: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-    color: '#333',
-  },
-  tituloDepartamento: {
-    fontSize: 20,
-    fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#4a90e2',
+    color: '#333',
   },
   input: {
     marginBottom: 15,
     backgroundColor: 'white',
     padding: 12,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
-  textArea: { height: 200, textAlignVertical: 'top' },
+  textArea: {
+    height: 200,
+    textAlignVertical: 'top'
+  },
   charCounter: {
     textAlign: 'right',
     color: '#666',
     marginBottom: 20,
     fontSize: 12,
   },
-  imageSection: { marginBottom: 20 },
-  imageLabel: { fontSize: 16, fontWeight: '600', marginBottom: 10, color: '#333' },
+  imageSection: {
+    marginBottom: 20
+  },
+  imageLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
+    color: '#333'
+  },
   imagePickerButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -279,7 +275,11 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderStyle: 'dashed',
   },
-  imagePickerText: { marginLeft: 10, color: '#666', fontSize: 16 },
+  imagePickerText: {
+    marginLeft: 10,
+    color: '#666',
+    fontSize: 16
+  },
   fileInfoContainer: {
     marginTop: 15,
     position: 'relative',
@@ -291,10 +291,25 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     width: '100%',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
-  fileName: { fontWeight: '600', color: '#333', marginTop: 5 },
-  fileType: { fontSize: 12, color: '#666' },
-  selectedImage: { width: '100%', height: 200, borderRadius: 8 },
+  fileName: {
+    fontWeight: '600',
+    color: '#333',
+    marginTop: 5,
+    textAlign: 'center'
+  },
+  fileType: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center'
+  },
+  selectedImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8
+  },
   removeImageButton: {
     position: 'absolute',
     top: 10,
@@ -302,4 +317,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 12,
   },
+  submitButton: {
+    marginTop: 10,
+    paddingVertical: 8,
+    backgroundColor: '#4a90e2',
+  },
 });
+
+// No olvides agregar la ruta en tu Stack Navigator si no lo has hecho:
+/*
+<Stack.Screen name="Anuncios" component={Anuncios} />
+*/
+
+// Y en tu RootStackParams:
+/*
+export type RootStackParams = {
+  // ... tus otras rutas
+  Anuncios: { idPueblo?: number }; // o los parámetros que necesites
+}
+*/

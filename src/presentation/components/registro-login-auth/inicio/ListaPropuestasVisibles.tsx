@@ -4,11 +4,9 @@ import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Activi
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParams } from '../../../routes/StackNavigator';
-import { propuestas, propuestasVisibles } from '../../propuestas/propuestaResponse';
+import {  propuestasVisibles } from '../../propuestas/propuestaResponse';
 
-import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { API_URL } from '../../../../api/tesloApi';
-import { Propuestas } from '../../../interfaces/propuestas';
+
 
 
 
@@ -84,9 +82,9 @@ export const ListaPropuestasVisibles = () => {
 
                 <View style={styles.itemFooter}>
                   <View style={styles.userContainer}>
-                    <Icon name="person-outline" size={16} color="#3498db" />
-                    <Text style={styles.userText}>Usuario {item.idUsuario}</Text>
-                    <Text style={styles.itemDescription}>{item.nombreConcejalia}</Text>
+                   
+                   
+                    <Text style={styles.itemDescription}>{item.nombre}</Text>
                   </View>
                   <Text style={styles.dateText}>
                     {item.fecha ? new Date(item.fecha).toLocaleDateString() : 'Sin fecha'}

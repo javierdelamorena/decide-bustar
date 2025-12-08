@@ -52,6 +52,7 @@ export const DepartamentoPropuesta = () => {
         }
         
         const data: Concejalia[] = await response.json(); // Usando interface corregida
+        
         setConcejalias(data);
       } else {
         console.log('No se encontró user en storage');

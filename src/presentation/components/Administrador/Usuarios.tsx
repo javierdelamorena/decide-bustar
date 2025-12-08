@@ -104,12 +104,12 @@ const darPermiso = async (usuarioId: any) => {
     if (!token) {
         console.log('No hay token disponible para dar permisos');
         return;
-    }
+    } 
 
     console.log('Dando permisos al usuario ID:', usuarioId);
     
     try {
-        const result = await fetch(API_URL + `/usuario/${usuarioId}/permisos`, {
+        const result = await fetch(API_URL + `/usuario/permiso/${usuarioId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`, // ← Usa el token del estado

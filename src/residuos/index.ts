@@ -1,4 +1,4 @@
 export * from '../presentation/screens/BoxObjetModelScreen';
-export * from './ListaAnuncios';
+export * from '../presentation/components/Tablonanuncios/ListaAnuncios';
 export * from './PositionScreen';
 

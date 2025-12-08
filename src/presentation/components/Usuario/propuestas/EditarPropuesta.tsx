@@ -16,26 +16,33 @@ export const EditarPropuesta = () => {
   const route = useRoute<editarPropuestaRouteProp>();
 
 
-  const { idPropuesta, titulo, descripcion } = route.params || {};
+  const { idPropuesta, titulo, descripcion, presupuesto, subencion, total,idConcejalia } = route.params || {};
 
-  console.log('datos de mis propuestas idPropuesta, titulo, descripcion ', idPropuesta, titulo, descripcion)
+  console.log('datos de mis propuestas idPropuesta, titulo, descripcion,presupuesto,subencion ', idPropuesta, titulo, descripcion, presupuesto, subencion, total)
   const [formData, setFormData] = useState({
     titulo: '',
-    descripcion: ''
+    descripcion: '',
+    presupuesto: '',
+    subencion: ''
   });
-
+  const [totales, setTotales] = useState(0);
   const [enviando, setEnviando] = useState(false);
 
-  const cargaDatos = (titulo: any, descripcion: any) => {
+  const cargaDatos = (titulo: any, descripcion: any, presupuesto: any, subencion: any) => {
     setFormData({
-      titulo, descripcion
+      titulo, descripcion, presupuesto, subencion
     });
   };
 
+  const numeroDevotos = (total: any) => {
+    setTotales(total)
 
+  }
   useEffect(() => {
 
-    cargaDatos(titulo, descripcion);
+    numeroDevotos(total);
+
+    cargaDatos(titulo, descripcion, presupuesto, subencion);
 
   }, []);
 
@@ -79,7 +86,11 @@ export const EditarPropuesta = () => {
         descripcion: formData.descripcion.trim(),
         idUsuario: userData.id,
         idPropuesta: idPropuesta,
-        idPueblo: idPueblo
+        idPueblo: idPueblo,
+        presupuesto: formData.presupuesto,
+        subencion: formData.subencion,
+        idConcejalia:idConcejalia
+
 
       };
 
@@ -101,7 +112,7 @@ export const EditarPropuesta = () => {
 
       const result = await response.json();
       Alert.alert('Éxito', 'Propuesta editada correctamente');
-      setFormData({ titulo: result.titulo, descripcion: result.descripcion });
+      setFormData({ titulo: result.titulo, descripcion: result.descripcion, presupuesto: result.presupuesto, subencion: result.subencion });
 
 
 
@@ -116,50 +127,50 @@ export const EditarPropuesta = () => {
       setEnviando(false);
     }
   };
- const handleDelete = async () => {
-  // Confirmación rápida
-  Alert.alert(
-    'Confirmar',
-    '¿Borrar esta propuesta?',
-    [
-      { text: 'No', style: 'cancel' },
-      { 
-        text: 'Sí, borrar', 
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            setEnviando(true);
-            const userJson = await StorrageAdater.getItem('user');
-            const token = await StorrageAdater.getItem('token');
-            
-            if (!userJson || !token) {
-              throw new Error('Datos de usuario incompletos');
+  const handleDelete = async () => {
+    // Confirmación rápida
+    Alert.alert(
+      'Confirmar',
+      '¿Borrar esta propuesta?',
+      [
+        { text: 'No', style: 'cancel' },
+        {
+          text: 'Sí, borrar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setEnviando(true);
+              const userJson = await StorrageAdater.getItem('user');
+              const token = await StorrageAdater.getItem('token');
+
+              if (!userJson || !token) {
+                throw new Error('Datos de usuario incompletos');
+              }
+
+              const userData = JSON.parse(userJson);
+              const response = await fetch(`${API_URL}/propuestas/${idPropuesta}`, {
+                method: 'DELETE',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                },
+              });
+
+              if (!response.ok) throw new Error(`Error ${response.status}`);
+
+              Alert.alert(' Éxito', 'Propuesta borrada');
+              navigation.navigate("TusPropuestas");
+
+            } catch (error) {
+              Alert.alert('Error', 'No se pudo borrar');
+            } finally {
+              setEnviando(false);
             }
-
-            const userData = JSON.parse(userJson);
-            const response = await fetch(`${API_URL}/propuestas/${idPropuesta}`, {
-              method: 'DELETE',
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-              },
-            });
-
-            if (!response.ok) throw new Error(`Error ${response.status}`);
-            
-            Alert.alert(' Éxito', 'Propuesta borrada');
-            navigation.navigate("TusPropuestas");
-            
-          } catch (error) {
-            Alert.alert('Error', 'No se pudo borrar');
-          } finally {
-            setEnviando(false);
           }
         }
-      }
-    ]
-  );
-};
+      ]
+    );
+  };
 
 
 
@@ -179,6 +190,22 @@ export const EditarPropuesta = () => {
           placeholder={titulo}
           editable={!enviando}
         />
+        <TextInput
+          value={formData.presupuesto}
+          onChangeText={text => handleInputChange('presupuesto', text)}
+          style={styles.input}
+          keyboardType="numeric"
+          placeholder={presupuesto?.toString()}
+          editable={!enviando}
+        />
+
+        <TextInput
+          value={formData.subencion}
+          onChangeText={text => handleInputChange('subencion', text)}
+          style={styles.input}
+          placeholder={subencion}
+          editable={!enviando}
+        />
 
         <TextInput
           value={formData.descripcion}
@@ -193,30 +220,34 @@ export const EditarPropuesta = () => {
         <Text style={styles.charCounter}>
           {formData.descripcion.length}/2000 caracteres
         </Text>
+        {totales == 0 ?
+          <><Button
+            mode="contained"
+            onPress={handleSubmit}
+            style={globalStyles.eyeButton}
+            disabled={enviando} // ← Deshabilitar durante envío
+            loading={enviando} // ← Mostrar loading
+          >
+            {enviando ? 'Enviando...' : 'Editar Propuesta'}
 
-        <Button
-          mode="contained"
-          onPress={handleSubmit}
-          style={globalStyles.eyeButton}
-          disabled={enviando} // ← Deshabilitar durante envío
-          loading={enviando} // ← Mostrar loading
-        >
-          {enviando ? 'Enviando...' : 'Editar Propuesta'}
+          </Button><Text style={styles.charCounter}>
 
-        </Button>
-        <Text style={styles.charCounter}>
+            </Text><Button
+              mode="contained"
+              onPress={handleDelete}
+              style={globalStyles.eyeButton}
+              disabled={enviando} // ← Deshabilitar durante envío
+              loading={enviando} // ← Mostrar loading
+            >
+              {enviando ? 'Enviando...' : 'Borrar Propuesta'}
 
-        </Text>
-        <Button
-          mode="contained"
-          onPress={handleDelete}
-          style={globalStyles.eyeButton}
-          disabled={enviando} // ← Deshabilitar durante envío
-          loading={enviando} // ← Mostrar loading
-        >
-          {enviando ? 'Enviando...' : 'Borrar Propuesta'}
-
-        </Button>
+            </Button></>
+          : <View style={styles.formContainer}>
+            <Text style={styles.textArea}>Tu propuesta tiene votos, ya no la puedes editar, ni borrar,
+              si quieres hacer algun cambio ponte en contacto con los administradores y si no afecta a la esencia de la propuesta se podra editar,
+              gracias por participar. </Text>
+          </View>
+        }
       </View>
     </ScrollView>
   );
