@@ -81,8 +81,8 @@ const ListaAnunciosAdministrador = () => {
                         key={lista.id || index}
                         id={lista.id}
                         anuncio={lista.anuncio}
-                        titulo_anuncio={lista.titulo_anuncio}
-                        foto_anuncio={lista.foto_anuncio}
+                        tituloAnuncio={lista.tituloAnuncio}
+                        fotoAnuncio={lista.fotoAnuncio}
                         fecha={lista.fecha}
                     />
                 ))}

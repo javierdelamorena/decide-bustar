@@ -13,12 +13,12 @@ import { StorrageAdater } from '../../../../adapters/Storage-adapter';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParams } from '../../../routes/StackNavigator';
 
-const Tablon = ({ id, anuncio, titulo_anuncio, foto_anuncio, fecha }: Lista) => {
+const Tablon = ({ id, anuncio, tituloAnuncio, fotoAnuncio, fecha }: Lista) => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const [anun, setAnuncio] = useState<Lista>();
 
-    const abrirTexto = (id: number, anuncio: string, titulo_anuncio: string, foto_anuncio: string, fecha: string) => {
-        setAnuncio({ id, anuncio, titulo_anuncio, foto_anuncio, fecha });
+    const abrirTexto = (id: number, anuncio: string, tituloAnuncio: string, fotoAnuncio: string, fecha: string) => {
+        setAnuncio({ id, anuncio, tituloAnuncio, fotoAnuncio, fecha });
     };
 
      const borrarAnuncio = async (id: number) => {
@@ -49,7 +49,7 @@ const Tablon = ({ id, anuncio, titulo_anuncio, foto_anuncio, fecha }: Lista) => 
             </View>
 
             {/* Título */}
-            <Text style={styles.titulo}>{titulo_anuncio}</Text>
+            <Text style={styles.titulo}>{tituloAnuncio}</Text>
 
             {/* Descripción del anuncio */}
             {anuncio ? (
@@ -62,7 +62,7 @@ const Tablon = ({ id, anuncio, titulo_anuncio, foto_anuncio, fecha }: Lista) => 
                     styles.presable,
                     pressed && styles.presablePressed
                 ]} 
-                onPress={() => abrirTexto(id, anuncio, titulo_anuncio, foto_anuncio, fecha)} 
+                onPress={() => abrirTexto(id, anuncio, tituloAnuncio, fotoAnuncio, fecha)} 
                 onLongPress={cerrarTexto}
             >
                 <View style={styles.row}>
@@ -85,12 +85,12 @@ const Tablon = ({ id, anuncio, titulo_anuncio, foto_anuncio, fecha }: Lista) => 
             </Pressable>
 
             {/* Imagen del anuncio */}
-            {anun?.foto_anuncio ? (
+            {anun?.fotoAnuncio ? (
                 <View style={styles.contenedorImagen}>
                     <Image
                         style={styles.imagen}
                         source={{ 
-                            uri: `${API_URL}/anuncios/descargar/` + anun.foto_anuncio 
+                            uri: `${API_URL}/anuncios/descargar/` + anun.fotoAnuncio 
                         }}
                         resizeMode="cover"
                     />

@@ -45,8 +45,8 @@ export const Register = () => {
       },
     })
       .then((res) => res.json())
-      .catch((error) => console.error("Error:", error))
-      .then((response) => console.log("Success:", response));
+      .catch((error) => Alert.alert('Error', 'Registro completado con éxito',error))
+      .then((response) => Alert.alert('Éxito', 'Registro completado con éxito',response));
 
   }
   const isValidEmail = (email: string) => {
@@ -72,10 +72,10 @@ export const Register = () => {
 
     try {
       await registrar();
-      Alert.alert('Éxito', 'Registro completado con éxito');
+      
       // navigation.navigate('Home'); // Descomenta cuando quieras navegar
     } catch (error) {
-      // El error ya se maneja en la función registrar
+      console.log('no se ha podido registrar');
     } finally {
       setIsLoading(false);
     }

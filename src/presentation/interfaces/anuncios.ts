@@ -3,8 +3,8 @@
 export interface Lista {
     id: number;
     anuncio: string;
-    titulo_anuncio: string;
-    foto_anuncio: string;
+    tituloAnuncio: string;
+    fotoAnuncio: string;
     fecha: string;
 
 

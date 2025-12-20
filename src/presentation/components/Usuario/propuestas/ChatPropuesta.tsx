@@ -48,7 +48,7 @@ export const ChatPropuesta = () => {
   const [enviando, setEnviando] = useState(false);
 
   const { idPropuesta } = route.params || {};
-
+console.log('este es el id propuesta que nos llega de la lista de propuestas: ',idPropuesta)
   const cargarPropuesta = async () => {
     try {
       setCargando(true);

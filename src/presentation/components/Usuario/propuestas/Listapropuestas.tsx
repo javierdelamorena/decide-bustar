@@ -133,7 +133,7 @@ export const ListaPropuestas = () => {
                           color="#3498db"
                         />
                         <Text style={styles.archivoText}>
-                          Archivo:{item.archivoNombre}
+                           {item.archivoNombre}
                         </Text>
                       </View>
                     </TouchableOpacity>
@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#3498db',
     marginHorizontal: 4,
+    marginVertical:10
   },
   archivoContent: {
     flexDirection: 'row',

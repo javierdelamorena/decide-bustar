@@ -3,8 +3,8 @@ import { Platform, Alert } from 'react-native';
 
 
 const testConnection = async () => {
-  //const API_URL = 'https://decidebustar.duckdns.org/propuestas/lista';
-  const API_URL = 'http://192.168.1.38:8080/propuestas/lista';
+  const API_URL = 'https://decidebustar.duckdns.org/propuestas/lista';
+  //const API_URL = 'http://192.168.1.38:8080/propuestas/lista';
   
   try {
     console.log('🔄 Iniciando prueba de conexión...');

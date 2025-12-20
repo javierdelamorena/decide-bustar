@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 export const App = () => {
   useEffect(() => {
     // Test simple y directo
-    fetch('https://decidebustar.duckdns.org/propuestas/lista')
+    fetch('https://decidebustar.duckdns.org/propuestas/lista/1')
       .then(response => {
         if (response.ok) {
           Alert.alert('✅ Éxito', 'Conexión al servidor funcionando');

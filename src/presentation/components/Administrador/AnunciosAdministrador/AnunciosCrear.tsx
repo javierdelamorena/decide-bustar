@@ -86,11 +86,10 @@ export const AnunciosCrear = () => {
       // Creamos FormData para incluir texto y archivo
       const dataToSend = new FormData();
       
-      dataToSend.append('titulo_anuncio', formData.titulo_anuncio.trim());
+      dataToSend.append('tituloAnuncio', formData.titulo_anuncio.trim());
       dataToSend.append('anuncio', formData.anuncio.trim());
       dataToSend.append('idPueblo', 1);
-      dataToSend.append('nombre', "");
-      dataToSend.append('ruta', "");
+
 
 
       // Asegúrate de tener idPueblo disponible (puede venir de route.params o userData)
