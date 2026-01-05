@@ -8,21 +8,21 @@ import { API_URL } from '@env';
 
 export const Usuarios = () => {
 
-    const [usuarios, setUsuario] = useState<User[]>([])
-    const [loadin, setLoading] = useState(false)
+    const [usuarios, setUsuario] = useState<User[]>([]);
 
-    const [token, setToken] = useState<String | null>(null)
+    const [loadin, setLoading] = useState(false);
+
+    const [token, setToken] = useState<String | null>(null);
 
 const loadUsuarios = async () => {
+
     setLoading(true);
 
     console.log('Buscando user en storage...');
+
     const userJson = await StorrageAdater.getItem('user');
+
     console.log('User encontrado (JSON):', userJson);
-
-   
-
-    
 
     if (!token) {
         console.log('No hay token disponible');
@@ -157,7 +157,7 @@ const darPermiso = async (usuarioId: any) => {
                                         }
                                     ]}
                                         onPress={() => borrarUsuario(usu.id)}>
-                                        <Text style={{ margin: 10, borderRadius: 10, backgroundColor: '#c967b0ff', padding: 10 }}>Dar de baja</Text>
+                                    <Text style={{ margin: 10, borderRadius: 10, backgroundColor: '#c967b0ff', padding: 10 }}>Dar de baja</Text>
                                     </Pressable>
                                     <Pressable style={({ pressed }) => [
 

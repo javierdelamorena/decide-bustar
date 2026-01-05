@@ -24,6 +24,8 @@ import { AnunciosCrear } from '../components/Administrador/AnunciosAdministrador
 import Anuncios from '../components/Administrador/AnunciosAdministrador/Anuncios';
 import ListaAnuncios from '../components/Tablonanuncios/ListaAnuncios';
 import ListaAnunciosAdministrador from '../components/Administrador/AnunciosAdministrador/ListaAnunciosAdministrador';
+import SubirFoto from '../components/Usuario/datosUsuario/SubirFoto';
+
 
 
 
@@ -54,6 +56,7 @@ export type RootStackParams = {
   Anuncios: undefined;
   ListaAnuncios: undefined;
   ListaAnunciosAdministrador:undefined;
+  SubirFoto?: { idUsuario: number };
 
 
 }
@@ -89,6 +92,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="Anuncios" component={Anuncios} />
       <Stack.Screen name="ListaAnuncios" component={ListaAnuncios} />
       <Stack.Screen name="ListaAnunciosAdministrador" component={ListaAnunciosAdministrador} />
+      <Stack.Screen name="SubirFoto" component={SubirFoto} /> 
 
 
 

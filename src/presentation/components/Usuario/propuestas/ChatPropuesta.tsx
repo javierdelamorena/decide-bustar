@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -111,8 +112,8 @@ console.log('este es el id propuesta que nos llega de la lista de propuestas: ',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id_Propuesta: idPropuesta,
-          id_Usuario: userData.id,
+          idPropuesta: idPropuesta,
+          idUsuario: userData.id,
           voto: voto
         })
       });
@@ -203,7 +204,9 @@ console.log('este es el id propuesta que nos llega de la lista de propuestas: ',
       <View style={styles.header}>
         <Text style={styles.votosTexto}>Votos: {propuesta.totales || 0}</Text>
         <Text style={styles.titulo}>{propuesta.titulo}</Text>
+         <ScrollView style={styles.scrollAltura} >
         <Text style={styles.descripcion}>{propuesta.descripcion}</Text>
+        </ScrollView>
 
         <View style={styles.botonesContainer}>
           {propuesta.votoUsuario === 1 ? (
@@ -306,6 +309,11 @@ const styles = StyleSheet.create({
   },
   botonesContainer: {
     alignItems: 'center',
+  },
+  scrollAltura: {
+    padding: 16,
+    paddingBottom: 20,
+    height:100
   },
   botonVotar: {
     flexDirection: 'row',

@@ -6,11 +6,18 @@ export interface PropuestaUsuario {
   idPropuesta: number;
   idUsuario: number;
   idPueblo:number;
-  archivoRuta:string;
-  archivoNombre:string;
+  
   presupuesto:number;
   subencion:string;
   nombre:string;
   idConcejalia:number;
+  archivoRuta1:string;
+  archivoNombre1:string;
+  archivoRuta2:string;
+  archivoNombre2:string;
+  archivoRuta3:string;
+  archivoNombre3:string;
+  archivoRuta4:string;
+  archivoNombre4:string;
 
 }

@@ -117,12 +117,7 @@ export const TusPropuestas = () => {
           </ScrollView>
         )}
 
-        <TouchableOpacity
-          style={globalStylesTusPropuestas.fab}
-          onPress={() => navigation.navigate('RealizarPropuesta')}
-        >
-          <Icon name="add" size={24} color="white" />
-        </TouchableOpacity>
+        
       </SafeAreaView>
     </SafeAreaProvider>
   );

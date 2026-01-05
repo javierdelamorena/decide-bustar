@@ -33,7 +33,10 @@ export const RealizarPropuesta = () => {
   const route = useRoute<RealizarPropuestaRouteProp>();
   const { idConcejalia, nombre } = route.params || {};
 
-  const [selectedFile, setSelectedFile] = useState<DocumentPickerResponse | null>(null);
+  const [selectedFile1, setSelectedFile1] = useState<DocumentPickerResponse | null>(null);
+  const [selectedFile2, setSelectedFile2] = useState<DocumentPickerResponse | null>(null);
+  const [selectedFile3, setSelectedFile3] = useState<DocumentPickerResponse | null>(null);
+  const [selectedFile4, setSelectedFile4] = useState<DocumentPickerResponse | null>(null);
   const [formData, setFormData] = useState<FormDataFields>({
     titulo: '',
     descripcion: '',
@@ -47,12 +50,57 @@ export const RealizarPropuesta = () => {
   };
 
   // ✅ Selector de archivo (cualquier tipo)
-  const selectFile = async () => {
+  const selectFile1 = async () => {
     try {
       const res = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.allFiles],
       });
-      setSelectedFile(res);
+      setSelectedFile1(res);
+    } catch (err: any) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('Selección cancelada');
+      } else {
+        console.error('Error al seleccionar archivo:', err);
+        Alert.alert('Error', 'No se pudo seleccionar el archivo');
+      }
+    }
+  };
+  const selectFile2 = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setSelectedFile2(res);
+    } catch (err: any) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('Selección cancelada');
+      } else {
+        console.error('Error al seleccionar archivo:', err);
+        Alert.alert('Error', 'No se pudo seleccionar el archivo');
+      }
+    }
+  };
+  const selectFile3 = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setSelectedFile3(res);
+    } catch (err: any) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('Selección cancelada');
+      } else {
+        console.error('Error al seleccionar archivo:', err);
+        Alert.alert('Error', 'No se pudo seleccionar el archivo');
+      }
+    }
+  };
+  const selectFile4 = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setSelectedFile4(res);
     } catch (err: any) {
       if (DocumentPicker.isCancel(err)) {
         console.log('Selección cancelada');
@@ -63,7 +111,7 @@ export const RealizarPropuesta = () => {
     }
   };
 
-  const removeFile = () => setSelectedFile(null);
+  const removeFile = () => setSelectedFile1(null);
 
   const handleSubmit = async () => {
     if (!formData.titulo || !formData.descripcion) {
@@ -76,11 +124,12 @@ export const RealizarPropuesta = () => {
 
       const userJson = await StorrageAdater.getItem('user');
       if (!userJson) throw new Error('No se encontraron datos de usuario');
-console.log('idconcejalia',idConcejalia)
+      console.log('idconcejalia', idConcejalia)
       const userData = JSON.parse(userJson);
       const token = await StorrageAdater.getItem('token');
       if (!token) throw new Error('No hay token de autenticación');
-
+      const regex = /^[0-9]+$/;
+      const tieneNumeros = regex.test(formData.presupuesto);
       // ✅ Creamos FormData para incluir texto y archivo
       const dataToSend = new FormData();
       dataToSend.append('titulo', formData.titulo.trim());
@@ -90,24 +139,62 @@ console.log('idconcejalia',idConcejalia)
       dataToSend.append('idPueblo', idPueblo);
       dataToSend.append('idConcejalia', idConcejalia);
       dataToSend.append('nombre', nombre);
-      dataToSend.append('presupuesto', formData.presupuesto);
+      dataToSend.append('presupuesto', tieneNumeros === true ? formData.presupuesto : 0);
       dataToSend.append('subencion', formData.subencion);
 
-     
-      
- 
-      if (selectedFile?.uri) {
 
-        const destPath = RNFS.TemporaryDirectoryPath + '/' + selectedFile.name;
 
-        await RNFS.copyFile(selectedFile.uri, destPath);
-        dataToSend.append('archivo', {
+
+      if (selectedFile1?.uri) {
+
+        const destPath = RNFS.TemporaryDirectoryPath + '/' + selectedFile1.name;
+
+        await RNFS.copyFile(selectedFile1.uri, destPath);
+        dataToSend.append('archivo1', {
           uri: 'file://' + destPath,
-          name: selectedFile.name || 'archivo',
-          type: selectedFile.type || 'application/octet-stream',
+          name: selectedFile1.name || 'archivo1',
+          type: selectedFile1.type || 'application/octet-stream',
         } as any);
         console.log('Archivo temporal creado en:', destPath);
       }
+      if (selectedFile2?.uri) {
+
+        const destPath = RNFS.TemporaryDirectoryPath + '/' + selectedFile2.name;
+
+        await RNFS.copyFile(selectedFile2.uri, destPath);
+        dataToSend.append('archivo2', {
+          uri: 'file://' + destPath,
+          name: selectedFile2.name || 'archivo2',
+          type: selectedFile2.type || 'application/octet-stream',
+        } as any);
+        console.log('Archivo temporal creado en:', destPath);
+      }
+      if (selectedFile3?.uri) {
+
+        const destPath = RNFS.TemporaryDirectoryPath + '/' + selectedFile3.name;
+
+        await RNFS.copyFile(selectedFile3.uri, destPath);
+        dataToSend.append('archivo3', {
+          uri: 'file://' + destPath,
+          name: selectedFile3.name || 'archivo3',
+          type: selectedFile3.type || 'application/octet-stream',
+        } as any);
+        console.log('Archivo temporal creado en:', destPath);
+      }
+      if (selectedFile4?.uri) {
+
+        const destPath = RNFS.TemporaryDirectoryPath + '/' + selectedFile4.name;
+
+        await RNFS.copyFile(selectedFile4.uri, destPath);
+        dataToSend.append('archivo4', {
+          uri: 'file://' + destPath,
+          name: selectedFile4.name || 'archivo4',
+          type: selectedFile4.type || 'application/octet-stream',
+        } as any);
+        console.log('Archivo temporal creado en:', destPath);
+      }
+
+
 
       const response = await fetch(`${API_URL}/propuestas/create`, {
         method: 'POST',
@@ -122,7 +209,7 @@ console.log('idconcejalia',idConcejalia)
 
       Alert.alert('Éxito', 'Propuesta creada correctamente');
       setFormData({ titulo: '', descripcion: '', presupuesto: '', subencion: '' });
-      setSelectedFile(null);
+      setSelectedFile1(null);
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', 'No se pudo crear la propuesta');
@@ -186,27 +273,147 @@ console.log('idconcejalia',idConcejalia)
 
           <TouchableOpacity
             style={styles.imagePickerButton}
-            onPress={selectFile}
+            onPress={selectFile1}
             disabled={enviando}
           >
             <Icon name="document-attach-outline" size={24} color="#666" />
             <Text style={styles.imagePickerText}>Seleccionar archivo</Text>
           </TouchableOpacity>
 
-          {selectedFile && (
+          {selectedFile1 && (
             <View style={styles.fileInfoContainer}>
-              {selectedFile.type?.startsWith('image/') ? (
+              {selectedFile1.type?.startsWith('image/') ? (
                 <Image
-                  source={{ uri: selectedFile.uri }}
+                  source={{ uri: selectedFile1.uri }}
                   style={styles.selectedImage}
                   resizeMode="cover"
                 />
               ) : (
                 <View style={styles.fileInfoBox}>
                   <Icon name="document-text-outline" size={30} color="#4a90e2" />
-                  <Text style={styles.fileName}>{selectedFile.name}</Text>
+                  <Text style={styles.fileName}>{selectedFile1.name}</Text>
                   <Text style={styles.fileType}>
-                    {selectedFile.type || 'Archivo'}
+                    {selectedFile1.type || 'Archivo'}
+                  </Text>
+                </View>
+              )}
+
+              <TouchableOpacity
+                style={styles.removeImageButton}
+                onPress={removeFile}
+                disabled={enviando}
+              >
+                <Icon name="close-circle" size={24} color="#ff4444" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View style={styles.imageSection}>
+          <Text style={styles.imageLabel}>Archivo adjunto (opcional)</Text>
+
+          <TouchableOpacity
+            style={styles.imagePickerButton}
+            onPress={selectFile2}
+            disabled={enviando}
+          >
+            <Icon name="document-attach-outline" size={24} color="#666" />
+            <Text style={styles.imagePickerText}>Seleccionar archivo</Text>
+          </TouchableOpacity>
+
+          {selectedFile2 && (
+            <View style={styles.fileInfoContainer}>
+              {selectedFile2.type?.startsWith('image/') ? (
+                <Image
+                  source={{ uri: selectedFile2.uri }}
+                  style={styles.selectedImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={styles.fileInfoBox}>
+                  <Icon name="document-text-outline" size={30} color="#4a90e2" />
+                  <Text style={styles.fileName}>{selectedFile2.name}</Text>
+                  <Text style={styles.fileType}>
+                    {selectedFile2.type || 'Archivo'}
+                  </Text>
+                </View>
+              )}
+
+              <TouchableOpacity
+                style={styles.removeImageButton}
+                onPress={removeFile}
+                disabled={enviando}
+              >
+                <Icon name="close-circle" size={24} color="#ff4444" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View style={styles.imageSection}>
+          <Text style={styles.imageLabel}>Archivo adjunto (opcional)</Text>
+
+          <TouchableOpacity
+            style={styles.imagePickerButton}
+            onPress={selectFile3}
+            disabled={enviando}
+          >
+            <Icon name="document-attach-outline" size={24} color="#666" />
+            <Text style={styles.imagePickerText}>Seleccionar archivo</Text>
+          </TouchableOpacity>
+
+          {selectedFile3 && (
+            <View style={styles.fileInfoContainer}>
+              {selectedFile3.type?.startsWith('image/') ? (
+                <Image
+                  source={{ uri: selectedFile3.uri }}
+                  style={styles.selectedImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={styles.fileInfoBox}>
+                  <Icon name="document-text-outline" size={30} color="#4a90e2" />
+                  <Text style={styles.fileName}>{selectedFile3.name}</Text>
+                  <Text style={styles.fileType}>
+                    {selectedFile3.type || 'Archivo'}
+                  </Text>
+                </View>
+              )}
+
+              <TouchableOpacity
+                style={styles.removeImageButton}
+                onPress={removeFile}
+                disabled={enviando}
+              >
+                <Icon name="close-circle" size={24} color="#ff4444" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View style={styles.imageSection}>
+          <Text style={styles.imageLabel}>Archivo adjunto (opcional)</Text>
+
+          <TouchableOpacity
+            style={styles.imagePickerButton}
+            onPress={selectFile4}
+            disabled={enviando}
+          >
+            <Icon name="document-attach-outline" size={24} color="#666" />
+            <Text style={styles.imagePickerText}>Seleccionar archivo</Text>
+          </TouchableOpacity>
+
+          {selectedFile4 && (
+            <View style={styles.fileInfoContainer}>
+              {selectedFile4.type?.startsWith('image/') ? (
+                <Image
+                  source={{ uri: selectedFile4.uri }}
+                  style={styles.selectedImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={styles.fileInfoBox}>
+                  <Icon name="document-text-outline" size={30} color="#4a90e2" />
+                  <Text style={styles.fileName}>{selectedFile4.name}</Text>
+                  <Text style={styles.fileType}>
+                    {selectedFile4.type || 'Archivo'}
                   </Text>
                 </View>
               )}

@@ -5,6 +5,7 @@ export interface User {
     apellidos: string;
     direccion:string;
     role:string;
+    fotoUsuario: string;
     
 
 

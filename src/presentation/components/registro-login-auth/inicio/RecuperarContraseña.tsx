@@ -38,10 +38,8 @@ export const RecuperarContraseña = () => {
       },
 
     });
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    Alert.alert('Ok', 'Hemos enviado un enlace a tu correo con el que podras establecer la nueva contraseña.');
+    
+    Alert.alert('Ok', 'Hemos enviado un enlace a tu correo, si el correo que nos proporcionaste es correcto, con el, podras establecer la nueva contraseña.');
     setIsLoading(false);
 
     navigation.navigate('Login');

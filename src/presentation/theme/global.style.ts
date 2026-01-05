@@ -37,7 +37,7 @@ export const globalStyles = StyleSheet.create({
         textAlign: 'center',
     },
     userInfoContainer: {
-        gap: 12,
+        gap: 14,
     },
     infoRow: {
         flexDirection: 'row',

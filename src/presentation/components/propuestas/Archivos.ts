@@ -2,11 +2,160 @@ import { API_URL } from "@env";
 import { Alert, Linking } from "react-native";
 import { StorrageAdater } from "../../../adapters/Storage-adapter";
 
-export const handleArchivoPress = async (item: any) => {
+export const handleArchivoPress1 = async (item: any) => {
     try {
         console.log(' Iniciando descarga de archivo...');
 
-        const nombreArchivo = item.archivoRuta?.split('/').pop() || item.archivoNombre;
+        const nombreArchivo = item.archivoRuta1?.split('/').pop() || item.archivoNombre1;
+
+        console.log(' Iniciando descarga de archivo...',nombreArchivo);
+
+        if (!nombreArchivo) {
+            Alert.alert('Error', 'No se encontró nombre de archivo');
+            return;
+        }
+
+        console.log('🔗 Descargando archivo:', nombreArchivo);
+        const userJson = await StorrageAdater.getItem('user');
+
+        // SOLUCIÓN SIN TOKEN: Abrir directamente en el navegador
+        const url = `${API_URL}/propuestas/descargar/${encodeURIComponent(nombreArchivo)}`;
+
+        console.log('URL completa:', url);
+
+        // Verificar si podemos abrir la URL
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            // Si no se puede abrir con Linking, usar fetch y mostrar opciones
+            Alert.alert(
+                'Descargar archivo',
+                '¿Cómo quieres descargar el archivo?',
+                [
+                    {
+                        text: 'Abrir en navegador',
+                        onPress: () => Linking.openURL(url)
+                    },
+                    {
+                        text: 'Cancelar',
+                        style: 'cancel'
+                    }
+                ]
+            );
+        }
+
+    } catch (error) {
+        console.error(' Error al descargar archivo:', error);
+        Alert.alert('Error', 'No se pudo abrir el archivo');
+    }
+};
+export const handleArchivoPress2 = async (item: any) => {
+    try {
+        console.log(' Iniciando descarga de archivo...');
+
+        const nombreArchivo = item.archivoRuta2?.split('/').pop() || item.archivoNombre2;
+
+        console.log(' Iniciando descarga de archivo...',nombreArchivo);
+
+        if (!nombreArchivo) {
+            Alert.alert('Error', 'No se encontró nombre de archivo');
+            return;
+        }
+
+        console.log('🔗 Descargando archivo:', nombreArchivo);
+        const userJson = await StorrageAdater.getItem('user');
+
+        // SOLUCIÓN SIN TOKEN: Abrir directamente en el navegador
+        const url = `${API_URL}/propuestas/descargar/${encodeURIComponent(nombreArchivo)}`;
+
+        console.log('URL completa:', url);
+
+        // Verificar si podemos abrir la URL
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            // Si no se puede abrir con Linking, usar fetch y mostrar opciones
+            Alert.alert(
+                'Descargar archivo',
+                '¿Cómo quieres descargar el archivo?',
+                [
+                    {
+                        text: 'Abrir en navegador',
+                        onPress: () => Linking.openURL(url)
+                    },
+                    {
+                        text: 'Cancelar',
+                        style: 'cancel'
+                    }
+                ]
+            );
+        }
+
+    } catch (error) {
+        console.error(' Error al descargar archivo:', error);
+        Alert.alert('Error', 'No se pudo abrir el archivo');
+    }
+};
+export const handleArchivoPress3 = async (item: any) => {
+    try {
+        console.log(' Iniciando descarga de archivo...');
+
+        const nombreArchivo = item.archivoRuta3?.split('/').pop() || item.archivoNombre3;
+
+        console.log(' Iniciando descarga de archivo...',nombreArchivo);
+
+        if (!nombreArchivo) {
+            Alert.alert('Error', 'No se encontró nombre de archivo');
+            return;
+        }
+
+        console.log('🔗 Descargando archivo:', nombreArchivo);
+        const userJson = await StorrageAdater.getItem('user');
+
+        // SOLUCIÓN SIN TOKEN: Abrir directamente en el navegador
+        const url = `${API_URL}/propuestas/descargar/${encodeURIComponent(nombreArchivo)}`;
+
+        console.log('URL completa:', url);
+
+        // Verificar si podemos abrir la URL
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            // Si no se puede abrir con Linking, usar fetch y mostrar opciones
+            Alert.alert(
+                'Descargar archivo',
+                '¿Cómo quieres descargar el archivo?',
+                [
+                    {
+                        text: 'Abrir en navegador',
+                        onPress: () => Linking.openURL(url)
+                    },
+                    {
+                        text: 'Cancelar',
+                        style: 'cancel'
+                    }
+                ]
+            );
+        }
+
+    } catch (error) {
+        console.error(' Error al descargar archivo:', error);
+        Alert.alert('Error', 'No se pudo abrir el archivo');
+    }
+};
+export const handleArchivoPress4 = async (item: any) => {
+    try {
+        console.log(' Iniciando descarga de archivo...');
+
+        const nombreArchivo = item.archivoRuta4?.split('/').pop() || item.archivoNombre4;
+
+        console.log(' Iniciando descarga de archivo...',nombreArchivo);
 
         if (!nombreArchivo) {
             Alert.alert('Error', 'No se encontró nombre de archivo');

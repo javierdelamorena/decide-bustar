@@ -1,18 +1,19 @@
+import { API_URL } from '@env';
 import { useEffect } from 'react';
 import { Platform, Alert } from 'react-native';
 
 
 const testConnection = async () => {
-  const API_URL = 'https://decidebustar.duckdns.org/propuestas/lista';
-  //const API_URL = 'http://192.168.1.38:8080/propuestas/lista';
+  //onst API_URL = 'https://decidebustar.duckdns.org/propuestas/lista';
+  const API_UR = `${API_URL}/propuestas/lista/1`;
   
   try {
     console.log('🔄 Iniciando prueba de conexión...');
     console.log('📱 Platform:', Platform.OS);
-    console.log('🔗 URL:', API_URL);
+    console.log('🔗 URL:', API_UR);
 
     // SOLUCIÓN: Usar Promise.race para timeout o eliminar la opción timeout
-    const response = await fetch(API_URL, {
+    const response = await fetch(API_UR, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

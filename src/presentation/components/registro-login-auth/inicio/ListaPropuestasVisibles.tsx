@@ -77,7 +77,9 @@ export const ListaPropuestasVisibles = () => {
             >
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.titulo}</Text>
-                <Text style={styles.itemDescription}>{item.descripcion}</Text>
+                <ScrollView style={styles.scrollAltura} >
+                                  <Text style={styles.itemDescription}>{item.descripcion}</Text>
+                                </ScrollView>
                 
 
                 <View style={styles.itemFooter}>
@@ -162,6 +164,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     paddingBottom: 20,
+  },
+  scrollAltura: {
+    padding: 16,
+    paddingBottom: 20,
+    height: 100
   },
   item: {
     backgroundColor: '#ffffff',

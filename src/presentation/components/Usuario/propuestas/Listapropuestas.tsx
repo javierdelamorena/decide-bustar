@@ -10,7 +10,8 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
-  Linking
+  Linking,
+  TextInput  // Añadir TextInput
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,17 +20,16 @@ import { propuestas } from '../../propuestas/propuestaResponse';
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
 import { User } from '../entities/user';
 import { API_URL } from '@env';
-import { getArchivoIcon, handleArchivoPress } from '../../propuestas/Archivos';
+import { getArchivoIcon, handleArchivoPress1,handleArchivoPress2,handleArchivoPress3,handleArchivoPress4 } from '../../propuestas/Archivos';
 
 export const ListaPropuestas = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [data, setData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]); // Estado para datos filtrados
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [usuario, setUsuario] = useState<User | null>(null);
-
-  // Función para manejar la descarga de archivos (SIN TOKEN)
-  
+  const [searchTerm, setSearchTerm] = useState(''); // Estado para término de búsqueda
 
   // Función para cargar las propuestas
   const loadPropuestas = async () => {
@@ -54,12 +54,29 @@ export const ListaPropuestas = () => {
     try {
       const resultado = await propuestas();
       setData(resultado);
+      setFilteredData(resultado); // Inicializar filteredData con todos los datos
     } catch (err) {
       console.error('Error al cargar propuestas:', err);
       setError('No se pudieron cargar las propuestas');
       setData([]);
+      setFilteredData([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Función para filtrar por concejalía
+  const filterByConcejalia = (text: string) => {
+    setSearchTerm(text);
+    
+    if (text.trim() === '') {
+      setFilteredData(data); // Mostrar todos si no hay búsqueda
+    } else {
+      const filtered = data.filter(item => 
+        item.nombreConcejalia?.toLowerCase().includes(text.toLowerCase()) ||
+        item.nombre?.toLowerCase().includes(text.toLowerCase()) // También buscar por departamento
+      );
+      setFilteredData(filtered);
     }
   };
 
@@ -88,8 +105,26 @@ export const ListaPropuestas = () => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Todas las propuestas</Text>
           <Text style={styles.headerSubtitle}>
-            {data.length} propuesta{data.length !== 1 ? 's' : ''} encontrada{data.length !== 1 ? 's' : ''}
+            {filteredData.length} propuesta{filteredData.length !== 1 ? 's' : ''} encontrada{filteredData.length !== 1 ? 's' : ''}
+            {searchTerm !== '' && ` (filtradas por: "${searchTerm}")`}
           </Text>
+        </View>
+
+        {/* Campo de búsqueda */}
+        <View style={styles.searchContainer}>
+          <Icon name="search-outline" size={20} color="#95a5a6" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Buscar por  departamento..."
+            placeholderTextColor="#95a5a6"
+            value={searchTerm}
+            onChangeText={filterByConcejalia}
+          />
+          {searchTerm !== '' && (
+            <TouchableOpacity onPress={() => filterByConcejalia('')}>
+              <Icon name="close-circle" size={20} color="#95a5a6" />
+            </TouchableOpacity>
+          )}
         </View>
 
         {error && (
@@ -100,64 +135,127 @@ export const ListaPropuestas = () => {
         )}
 
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-          {data.map((item) => (
-            <TouchableOpacity
-              key={item.idPropuesta}
-              style={styles.item}
-              onPress={() => navigation.navigate('ChatPropuesta', {
-                idPropuesta: item.idPropuesta,
-                idUsuario: item.idUsuario
-              })}
-            >
-              <View style={styles.itemContent}>
-                <Text style={styles.itemDescription}>Departamento: {item.nombre}</Text>
-                <Text style={styles.itemTitle}>{item.titulo}{item.nombreConcejalia}</Text>
-                <Text style={styles.itemDescription}>{item.descripcion}</Text>
+          {filteredData.length === 0 && searchTerm !== '' ? (
+            <View style={styles.noResultsContainer}>
+              <Icon name="alert-circle-outline" size={50} color="#bdc3c7" />
+              <Text style={styles.noResultsText}>
+                No se encontraron propuestas para "{searchTerm}"
+              </Text>
+              <TouchableOpacity 
+                style={styles.clearButton}
+                onPress={() => filterByConcejalia('')}
+              >
+                <Text style={styles.clearButtonText}>Mostrar todas las propuestas</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            filteredData.map((item) => (
+              <TouchableOpacity
+                key={item.idPropuesta}
+                style={styles.item}
+                onPress={() => navigation.navigate('ChatPropuesta', {
+                  idPropuesta: item.idPropuesta,
+                  idUsuario: item.idUsuario
+                })}
+              >
+                <View style={styles.itemContent}>
+                  <Text style={styles.itemDescription}>Departamento: {item.nombre}</Text>
+                  <Text style={styles.itemTitle}>{item.titulo}</Text>
+                  
+                  <ScrollView style={styles.scrollAltura} >
+                    <Text style={styles.itemDescription}>{item.descripcion}</Text>
+                  </ScrollView>
 
-                <View style={styles.itemFooter}>
-                  <View style={styles.userContainer}>
-                    <Icon name="person-outline" size={16} color="#3498db" />
-                    <Text style={styles.userText}>Usuario {item.idUsuario}</Text>
+                  <View style={styles.itemFooter}>
+                    <View style={styles.userContainer}>
+                      <Icon name="person-outline" size={16} color="#3498db" />
+                      <Text style={styles.userText}>Usuario {item.idUsuario}</Text>
+                    </View>
+
+                    {/* ARCHIVOS */}
+                    {item.archivoRuta1 && (
+                      <TouchableOpacity
+                        style={styles.archivoButton}
+                        onPress={() => handleArchivoPress1(item)}
+                      >
+                        <View style={styles.archivoContent}>
+                          <Icon
+                            name={getArchivoIcon(item.archivoRuta1)}
+                            size={16}
+                            color="#3498db"
+                          />
+                          <Text style={styles.archivoText}>
+                            {item.archivoNombre1}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                    {item.archivoRuta2 && (
+                      <TouchableOpacity
+                        style={styles.archivoButton}
+                        onPress={() => handleArchivoPress2(item)}
+                      >
+                        <View style={styles.archivoContent}>
+                          <Icon
+                            name={getArchivoIcon(item.archivoRuta2)}
+                            size={16}
+                            color="#3498db"
+                          />
+                          <Text style={styles.archivoText}>
+                            {item.archivoNombre2}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+
+                    {item.archivoRuta3 && (
+                      <TouchableOpacity
+                        style={styles.archivoButton}
+                        onPress={() => handleArchivoPress3(item)}
+                      >
+                        <View style={styles.archivoContent}>
+                          <Icon
+                            name={getArchivoIcon(item.archivoRuta3)}
+                            size={16}
+                            color="#3498db"
+                          />
+                          <Text style={styles.archivoText}>
+                            {item.archivoNombre3}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                    {item.archivoRuta4 && (
+                      <TouchableOpacity
+                        style={styles.archivoButton}
+                        onPress={() => handleArchivoPress4(item)}
+                      >
+                        <View style={styles.archivoContent}>
+                          <Icon
+                            name={getArchivoIcon(item.archivoRuta4)}
+                            size={16}
+                            color="#3498db"
+                          />
+                          <Text style={styles.archivoText}>
+                            {item.archivoNombre4}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+
+                    <Text style={styles.dateText}>
+                      {item.fecha ? new Date(item.fecha).toLocaleDateString() : 'Sin fecha'}
+                    </Text>
                   </View>
-
-                  {/* ARCHIVO EN EL FOOTER */}
-                  {item.archivoRuta && (
-                    <TouchableOpacity
-                      style={styles.archivoButton}
-                      onPress={() => handleArchivoPress(item)}
-                    >
-                      <View style={styles.archivoContent}>
-                        <Icon
-                          name={getArchivoIcon(item.archivoRuta)}
-                          size={16}
-                          color="#3498db"
-                        />
-                        <Text style={styles.archivoText}>
-                           {item.archivoNombre}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-
-                  <Text style={styles.dateText}>
-                    {item.fecha ? new Date(item.fecha).toLocaleDateString() : 'Sin fecha'}
-                  </Text>
                 </View>
-              </View>
 
-              <View style={styles.arrowContainer}>
-                <Icon name="chevron-forward" size={20} color="#95a5a6" />
-              </View>
-            </TouchableOpacity>
-          ))}
+                <View style={styles.arrowContainer}>
+                  <Icon name="chevron-forward" size={20} color="#95a5a6" />
+                </View>
+              </TouchableOpacity>
+            ))
+          )}
         </ScrollView>
-
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => navigation.navigate('ChatPropuesta')}
-        >
-          <Icon name="add" size={24} color="#ffffff" />
-        </TouchableOpacity>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -195,6 +293,53 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#7f8c8d',
   },
+  // Estilos para el buscador
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    marginHorizontal: 16,
+    marginTop: 10,
+    marginBottom: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#2c3e50',
+    paddingVertical: 4,
+  },
+  // Estilos para cuando no hay resultados
+  noResultsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 40,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#7f8c8d',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  clearButton: {
+    marginTop: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#3498db',
+    borderRadius: 8,
+  },
+  clearButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   errorBanner: {
     backgroundColor: '#e74c3c',
     flexDirection: 'row',
@@ -215,6 +360,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     paddingBottom: 20,
+  },
+  scrollAltura: {
+    padding: 16,
+    paddingBottom: 20,
+    height: 100
   },
   item: {
     backgroundColor: '#ffffff',
@@ -240,6 +390,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#2c3e50',
     marginBottom: 6,
+  },
+  concejaliaText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#3498db',
+    marginBottom: 6,
+    fontStyle: 'italic',
   },
   itemDescription: {
     fontSize: 14,
@@ -301,7 +458,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#3498db',
     marginHorizontal: 4,
-    marginVertical:10
+    marginVertical: 10
   },
   archivoContent: {
     flexDirection: 'row',
