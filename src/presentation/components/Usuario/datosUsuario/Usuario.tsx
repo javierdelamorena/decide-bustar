@@ -1,12 +1,13 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { RootStackParams } from '../../../routes/StackNavigator';
+
 import { StorrageAdater } from '../../../../adapters/Storage-adapter';
-import { useEffect } from 'react';
 import { User } from '../entities/user';
 import { API_URL } from '@env';
+import { RootStackParams } from '../../../routes/StackNavigator';
+import { Image } from 'react-native-paper/lib/typescript/components/List/List';
 
 const { width } = Dimensions.get('window');
 
@@ -20,7 +21,7 @@ interface InformacionUsuario {
 interface MenuItem {
   id: number;
   title: string;
-  screen: string;
+  screen: keyof RootStackParams;
   icon: string;
   color: string;
   description: string;
@@ -29,15 +30,29 @@ interface MenuItem {
 export const Usuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
+  const editarFoto = (idUsuario?: any) => {
+    if (!idUsuario) {
+      Alert.alert('Error', 'No se pudo obtener el ID del usuario');
+      return;
+    }
+    navigation.navigate('SubirFoto', { idUsuario });
+  };
+
   const [usuario, setUsuario] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
   const [apoyos, setApoyos] = useState(0);
   const [implementadas, setImplementadas] = useState(0);
   const [propuestas, setPropuestas] = useState(0);
-  
-  // SOLUCIÓN: Especifica el tipo MenuItem[]
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+
+  const handleMenuItemPress = (screen: keyof RootStackParams) => {
+    if (screen === 'Departamentos') {
+      // Si necesitas pasar parámetros específicos a alguna pantalla
+      navigation.navigate(screen);
+    } else {
+      navigation.navigate(screen);
+    }
+  };
 
   useEffect(() => {
     const loadUserComentariosYTotales = async () => {
@@ -72,9 +87,9 @@ export const Usuario = () => {
 
         const result: InformacionUsuario = await response.json();
         console.log('InformacionUsuario', result.numVotos, result.numPropuestas, result.numComentarios);
-        setApoyos(result.numVotos);
-        setImplementadas(result.numComentarios);
-        setPropuestas(result.numPropuestas);
+        setApoyos(result.numVotos || 0);
+        setImplementadas(result.numComentarios || 0);
+        setPropuestas(result.numPropuestas || 0);
 
         console.log('Datos cargados:', result);
 
@@ -85,10 +100,13 @@ export const Usuario = () => {
         setLoading(false);
       }
     };
-    
+
     const unsubscribe = navigation.addListener('focus', () => {
       loadUserComentariosYTotales();
     });
+
+    // Cargar también al montar el componente
+    loadUserComentariosYTotales();
 
     return unsubscribe;
   }, [navigation]);
@@ -120,8 +138,8 @@ export const Usuario = () => {
   // Este useEffect se ejecutará cuando "usuario" cambie
   useEffect(() => {
     console.log('Usuario actualizado:', usuario);
-    
-    const menu: MenuItem[] = [ // ← Especifica el tipo aquí también
+
+    const menu: MenuItem[] = [
       {
         id: 1,
         title: 'Realizar Propuesta',
@@ -151,7 +169,7 @@ export const Usuario = () => {
         title: 'Editar Usuario',
         screen: 'EditarUsuario',
         icon: 'build-outline',
-        color: '#9b59b6',
+        color: '#f39c12',
         description: 'Edita tus datos'
       },
       {
@@ -164,11 +182,11 @@ export const Usuario = () => {
       },
       {
         id: 6,
-        title: 'Configuracion ',
+        title: 'Configuración',
         screen: 'Configuracion',
         icon: 'settings-outline',
-        color: '#3ce7bcff',
-        description: 'Permicsos'
+        color: '#3498db',
+        description: 'Permisos'
       }
     ];
 
@@ -180,7 +198,7 @@ export const Usuario = () => {
           id: 7,
           title: 'Administrador',
           screen: 'Administrador',
-          icon: 'settings-outline',
+          icon: 'shield-checkmark-outline',
           color: '#f39c12',
           description: 'Menú de administración'
         }
@@ -192,19 +210,28 @@ export const Usuario = () => {
 
   }, [usuario]);
 
-  // ... resto del código (return y styles) igual
-
-
-  
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
-          <Icon name="person" size={40} color="#fff" />
+          {usuario?.fotoUsuario ? (
+            <Image
+              source={{ uri: usuario.fotoUsuario }} 
+              style={styles.avatarImage}
+            />
+          ) : (
+            <Icon name="person" size={40} color="#fff" />
+          )}
         </View>
-        <Text style={styles.title}>!Hola {usuario?.username || 'Usuario'}!</Text>
-
+        <TouchableOpacity
+          style={styles.editPhotoButton}
+          onPress={() => editarFoto(usuario?.id)}
+        >
+          <Icon name="camera-outline" size={20} color="#3498db" />
+          <Text style={styles.editPhotoText}>Editar foto</Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.title}>¡Hola {usuario?.username || 'Usuario'}!</Text>
         <Text style={styles.subtitle}>¿Qué te gustaría hacer hoy?</Text>
       </View>
 
@@ -220,7 +247,7 @@ export const Usuario = () => {
                 transform: [{ scale: pressed ? 0.98 : 1 }]
               }
             ]}
-            onPress={() => navigation.navigate(item.screen as keyof RootStackParams)}
+            onPress={() => handleMenuItemPress(item.screen)}
           >
             <View style={styles.cardContent}>
               <View style={styles.iconContainer}>
@@ -230,7 +257,7 @@ export const Usuario = () => {
                 <Text style={styles.menuTitle}>{item.title}</Text>
                 <Text style={styles.menuDescription}>{item.description}</Text>
               </View>
-              {/* <Icon name="chevron-right" size={20} color="#fff" /> */}
+              <Icon name="chevron-forward" size={20} color="#fff" />
             </View>
           </Pressable>
         ))}
@@ -285,7 +312,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#3498db',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 40,
+  },
+  editPhotoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#f0f8ff',
+    borderRadius: 15,
     marginBottom: 15,
+  },
+  editPhotoText: {
+    marginLeft: 5,
+    color: '#3498db',
+    fontSize: 14,
+    fontWeight: '500',
   },
   title: {
     fontSize: 28,
@@ -346,6 +394,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     marginHorizontal: 20,
+    marginBottom: 30,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
